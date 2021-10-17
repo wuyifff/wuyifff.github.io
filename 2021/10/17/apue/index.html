@@ -1,0 +1,2018 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="this is my blog to share my learning experience">
+  <meta name="author" content="wuyifff">
+  <meta name="keywords" content="">
+  <meta name="description" content="0.tips输入输出问题 在linux系统下使用printf发现有时没有立即输出，有时又能立即输出 原因是printf使用行缓冲，没有刷新缓冲区，故没有输出。 缓冲区刷新的条件：1.进程结束。2.遇到\n。3.缓冲区满。4.手动刷新缓冲区fflush(stdout)。   一些有用的函数&lt;stdlib.h&gt; atoi(str) 用法：将字符串里的数字字符转化为整形数。返回整形值。 注意">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UNIX环境高级编程 阅读笔记">
+<meta property="og:url" content="https://wuyifff.github.io/2021/10/17/apue/index.html">
+<meta property="og:site_name" content="w1fly&#39;s blog">
+<meta property="og:description" content="0.tips输入输出问题 在linux系统下使用printf发现有时没有立即输出，有时又能立即输出 原因是printf使用行缓冲，没有刷新缓冲区，故没有输出。 缓冲区刷新的条件：1.进程结束。2.遇到\n。3.缓冲区满。4.手动刷新缓冲区fflush(stdout)。   一些有用的函数&lt;stdlib.h&gt; atoi(str) 用法：将字符串里的数字字符转化为整形数。返回整形值。 注意">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/08/Uto3clnhVJEy12D.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/08/gsyILjapZ29F7t6.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/08/I9dk2Rxzu4bLwXe.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/10/2q7eFnO8j6xHNyY.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/12/6ILPQsK8ROXj5CF.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/12/qnl1Hc9s4xKOfUY.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/13/9X1HA2xE8dQ7TrI.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/13/NQ7HU8TExiwOo3J.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/15/pDU7nBhWYsqKtjm.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/15/qJIVv3AE1sRPOQm.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/15/lSc1txX8ZjoD2sv.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/13/oRPtp3KE8DM6zXm.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/13/mTB6qjaRNg81KUw.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/15/adhHkbEo9LBI1gC.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/15/7JrTCHj1DRlBpy6.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/15/3b7pgVX6hin1FEW.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/15/U2B4Ym8CMXEQ1Lh.png">
+<meta property="article:published_time" content="2021-10-17T07:22:38.472Z">
+<meta property="article:modified_time" content="2021-10-17T07:38:39.541Z">
+<meta property="article:author" content="wuyifff">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png">
+  
+  <title>UNIX环境高级编程 阅读笔记 - w1fly&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wuyifff.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="w1fly's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="UNIX环境高级编程 阅读笔记">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-10-17 15:22" pubdate>
+        2021年10月17日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      16k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      49 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">UNIX环境高级编程 阅读笔记</h1>
+            
+            <div class="markdown-body">
+              <h1 id="0-tips"><a href="#0-tips" class="headerlink" title="0.tips"></a>0.tips</h1><h2 id="输入输出问题"><a href="#输入输出问题" class="headerlink" title="输入输出问题"></a>输入输出问题</h2><ul>
+<li><p>在linux系统下使用printf发现有时没有立即输出，有时又能立即输出</p>
+<p>原因是printf使用行缓冲，没有刷新缓冲区，故没有输出。</p>
+<p><strong>缓冲区刷新的条件：</strong><br>1.进程结束。<br>2.遇到\n。<br>3.缓冲区满。<br>4.手动刷新缓冲区fflush(stdout)。</p>
+</li>
+</ul>
+<h2 id="一些有用的函数"><a href="#一些有用的函数" class="headerlink" title="一些有用的函数"></a>一些有用的函数</h2><h3 id="lt-stdlib-h-gt"><a href="#lt-stdlib-h-gt" class="headerlink" title="&lt;stdlib.h&gt;"></a>&lt;stdlib.h&gt;</h3><ul>
+<li><p>atoi(str)</p>
+<p>用法：将字符串里的数字字符转化为整形数。返回整形值。</p>
+<p>注意：转化时跳过前面的空格字符，直到遇上数字或正负符号才开始做转换，而再遇到非数字或字符串结束时(’/0’)才结束转换，并将结果返回。</p>
+<p>用于转化argv[]的参数</p>
+</li>
+</ul>
+<h2 id="小知识"><a href="#小知识" class="headerlink" title="小知识"></a>小知识</h2><ul>
+<li>C/C++规定，一个数如果要指明它采用八进制，必须在它前面加上一个0（数字0），如：123是十进制，但0123则表示采用八进制。这就是八进制数在C、C++中的表达方法。（<strong>很多宏的掩码就是八进制与</strong>）</li>
+</ul>
+<h1 id="1-基础"><a href="#1-基础" class="headerlink" title="1.基础"></a>1.基础</h1><h1 id="1-1what-is-os"><a href="#1-1what-is-os" class="headerlink" title="1.1what is os"></a>1.1what is os</h1><h2 id="1-1-1内核"><a href="#1-1-1内核" class="headerlink" title="1.1.1内核"></a>1.1.1内核</h2><ul>
+<li><p>进程线程管理</p>
+<p>进程管理主要为linux，windows只是壳子</p>
+</li>
+<li><p>内存管理</p>
+</li>
+<li><p>设备驱动</p>
+<p>windows  .sys文件    linux .ko文件</p>
+</li>
+<li><p>文件系统</p>
+</li>
+<li><p>中断子系统</p>
+</li>
+</ul>
+<h3 id="1-1-2内核-用户态"><a href="#1-1-2内核-用户态" class="headerlink" title="1.1.2内核/用户态"></a>1.1.2内核/用户态</h3><ul>
+<li><p>ring0/ring3    环0内核态，环3用户态</p>
+<p>ring1/ring2暂时没用到</p>
+</li>
+<li><p>系统调用 内核为应用程序提供的接口   用户态-&gt;内核态</p>
+</li>
+<li><p>体系结构</p>
+<p><img src="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png" srcset="/img/loading.gif" lazyload alt="image-20211007104949635"></p>
+<p>shell    sh/bash/csh/ksh </p>
+<p>库函数    库函数到系统调用</p>
+</li>
+</ul>
+<h2 id="1-2登录"><a href="#1-2登录" class="headerlink" title="1.2登录"></a>1.2登录</h2><h3 id="1-2-1-tty-psedo-tty"><a href="#1-2-1-tty-psedo-tty" class="headerlink" title="1.2.1 tty/psedo-tty"></a>1.2.1 tty/psedo-tty</h3><p>TTY是电传打字机Teletypewriter的缩写，在带显示屏的视频终端出现之前，TTY是最流行的终端设备</p>
+<h3 id="1-2-2-etc-password"><a href="#1-2-2-etc-password" class="headerlink" title="1.2.2 /etc/password"></a>1.2.2 /etc/password</h3><ul>
+<li>密码可以在etc/password看到</li>
+<li>shadow文件</li>
+<li>起始目录</li>
+<li>用户id</li>
+<li>组id</li>
+<li>shell</li>
+</ul>
+<h2 id="1-3-文件"><a href="#1-3-文件" class="headerlink" title="1.3 文件"></a>1.3 文件</h2><h3 id="1-3-1-一切皆为文件"><a href="#1-3-1-一切皆为文件" class="headerlink" title="1.3.1 一切皆为文件"></a>1.3.1 一切皆为文件</h3><ul>
+<li>目录</li>
+<li>文本文件/二进制文件一视同仁</li>
+<li>设备文件：字符设备、块设备、网络设备（在/dev下ll看第一位）</li>
+<li>socket   linux与windows不同</li>
+<li>管道、消息队列等</li>
+</ul>
+<h3 id="1-3-2-相对路径-绝对路径"><a href="#1-3-2-相对路径-绝对路径" class="headerlink" title="1.3.2 相对路径/绝对路径"></a>1.3.2 相对路径/绝对路径</h3><p> /    ..     .</p>
+<h2 id="1-4-I-O"><a href="#1-4-I-O" class="headerlink" title="1.4 I/O"></a>1.4 I/O</h2><ul>
+<li>文件描述符fd</li>
+<li>stdin/stdout/stderr  对应0/1/2</li>
+</ul>
+<h2 id="1-5-进程"><a href="#1-5-进程" class="headerlink" title="1.5 进程"></a>1.5 进程</h2><ul>
+<li><p>进程与程序的关系</p>
+</li>
+<li><p>进程id</p>
+<p>windows下为4的倍数（复用原因）</p>
+<p>linux下用ps命令查看</p>
+</li>
+<li><p>进程控制</p>
+<p>fork 子进程都是由父进程fork出来的（写时复制）</p>
+<p>exec  fork之后调用，类似windows的winexecute api</p>
+<p>waitpid</p>
+</li>
+</ul>
+<h2 id="1-6-出错处理"><a href="#1-6-出错处理" class="headerlink" title="1.6 出错处理"></a>1.6 出错处理</h2><ul>
+<li><p>errno</p>
+<p>windows下有geterrornumber</p>
+</li>
+<li><p>strerror</p>
+</li>
+</ul>
+<h2 id="1-7信号"><a href="#1-7信号" class="headerlink" title="1.7信号"></a>1.7信号</h2><p>可以理解为用户层的中断，异步打断执行流</p>
+<ul>
+<li><p>信号的处理</p>
+<p>系统默认处理： 忽略/中止进程</p>
+<p>为指定信号注册处理函数</p>
+</li>
+</ul>
+<p>是Linux编程重点，也容易踩坑</p>
+<h2 id="1-8-时间"><a href="#1-8-时间" class="headerlink" title="1.8 时间"></a>1.8 时间</h2><h3 id="日历时间"><a href="#日历时间" class="headerlink" title="日历时间"></a>日历时间</h3><p>UTC</p>
+<p>time-t</p>
+<h3 id="进程时间"><a href="#进程时间" class="headerlink" title="进程时间"></a>进程时间</h3><p>clock_t</p>
+<p>用户CPU时间</p>
+<p>系统CPU时间</p>
+<h1 id="2-UNIX标准"><a href="#2-UNIX标准" class="headerlink" title="2.UNIX标准"></a>2.UNIX标准</h1><h2 id="2-1-标准"><a href="#2-1-标准" class="headerlink" title="2.1 标准"></a>2.1 标准</h2><h3 id="ISO-C组成"><a href="#ISO-C组成" class="headerlink" title="ISO C组成"></a>ISO C组成</h3><ul>
+<li>语法、语义</li>
+<li>标准库</li>
+</ul>
+<h3 id="ISO-C历史"><a href="#ISO-C历史" class="headerlink" title="ISO C历史"></a>ISO C历史</h3><ul>
+<li>ANSI C89</li>
+<li>C99<ul>
+<li>restrict</li>
+<li>long long</li>
+<li>单行注释</li>
+<li>分散代码与声明</li>
+</ul>
+</li>
+<li>C11</li>
+</ul>
+<h3 id="POSIX标准"><a href="#POSIX标准" class="headerlink" title="POSIX标准"></a>POSIX标准</h3><ul>
+<li>提升各种应用程序在各种UNIX系统环境间的可移植性</li>
+<li>只定义接口而非实现</li>
+</ul>
+<h3 id="SUS-single-UNIX-specification"><a href="#SUS-single-UNIX-specification" class="headerlink" title="SUS(single UNIX specification)"></a>SUS(single UNIX specification)</h3><ul>
+<li>POSIX的超集</li>
+<li>扩展了功能</li>
+</ul>
+<h2 id="2-2-实现"><a href="#2-2-实现" class="headerlink" title="2.2 实现"></a>2.2 实现</h2><ul>
+<li>FreeBSD</li>
+<li>Linux</li>
+<li>Mac OS X</li>
+<li>Solaris</li>
+</ul>
+<h2 id="2-3限制"><a href="#2-3限制" class="headerlink" title="2.3限制"></a>2.3限制</h2><h3 id="编译时限制"><a href="#编译时限制" class="headerlink" title="编译时限制"></a>编译时限制</h3><ul>
+<li><p>ISO C</p>
+<p>limits.h    各种最大最小值(宏内定义了，include直接用)</p>
+<p>float.h    浮点数相关</p>
+<p>stdio.h</p>
+</li>
+<li><p>POSIX 限制</p>
+</li>
+</ul>
+<h3 id="运行时限制"><a href="#运行时限制" class="headerlink" title="运行时限制"></a>运行时限制</h3><p>只有运行时才能拿到，例如系统调用给出</p>
+<ul>
+<li>sysconf</li>
+<li>pathconf/fpathconf</li>
+</ul>
+<h1 id="3-无缓冲I-O（文件IO）"><a href="#3-无缓冲I-O（文件IO）" class="headerlink" title="3. 无缓冲I/O（文件IO）"></a>3. 无缓冲I/O（文件IO）</h1><h2 id="3-1-文件描述符fd"><a href="#3-1-文件描述符fd" class="headerlink" title="3.1 文件描述符fd"></a>3.1 文件描述符fd</h2><ul>
+<li><p>所有打开文件都由fd引用，fd为非负int（出错时为负）</p>
+</li>
+<li><p>类似windows的HANDLE</p>
+</li>
+<li><p>STDIN_FILENO  STDOUT_FILENO  STDERR_FILENO</p>
+</li>
+<li><p>OPEN_MAX（文件打开的极限值）</p>
+</li>
+<li><p><img src="https://i.loli.net/2021/10/08/Uto3clnhVJEy12D.png" srcset="/img/loading.gif" lazyload alt="image-20211008102820346"></p>
+</li>
+<li><p><img src="https://i.loli.net/2021/10/08/gsyILjapZ29F7t6.png" srcset="/img/loading.gif" lazyload alt="image-20211008103035519"></p>
+<ul>
+<li><strong>进程各自维护自己的文件描述符表，文件描述符表记录文件描述符标志，和一个指向文件表项的指针</strong></li>
+<li><strong>文件表项由内核为每一个打开的文件维护，包括文件状态标志、当前文件偏移、以及指向v结点的指针</strong><ul>
+<li><strong>==不同进程打开同一个文件、同一进程调用多次open同一个文件==并不共享file table entry（文件表项）</strong> 因为各自的偏移可能不同，也可以理解为调用一次open打开一个文件表项，而复制fd与之无关<ul>
+<li>但是fork出来的子进程的fd指向同一个文件表项（因为文件描述符表也copy，p397）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>/dev/fd</p>
+<p>/prof/self/fd</p>
+</li>
+</ul>
+<h2 id="3-2-API"><a href="#3-2-API" class="headerlink" title="3.2 API"></a>3.2 API</h2><h3 id="open-openat-create"><a href="#open-openat-create" class="headerlink" title="open/openat/create"></a>open/openat/create</h3><ul>
+<li><p>oflag    <strong>文件状态标志</strong></p>
+<ul>
+<li><p>O_RDONLY    O_WRONLY    O_RDWR</p>
+<p>必须指定且互斥</p>
+</li>
+<li><p>O_APPEND    O_CLOEXEC    O_CREAT    O_DIRECTORY    O_EXCL    O_SYNC    O_DSYNC    O_TRUNC</p>
+</li>
+<li><p>O_CREAT | O_EXCL 配合测试创建文件的原子性</p>
+</li>
+</ul>
+</li>
+<li><p>openat的path可以为相对路径</p>
+</li>
+<li><p>creat只写创建，想要创建写之后再读必须close之后再open，用open实现：</p>
+<p>open(path, O_RDWR | O_CREAT | O_TRUNC, mode)</p>
+</li>
+</ul>
+<h3 id="close"><a href="#close" class="headerlink" title="close"></a>close</h3><ul>
+<li><p>会关闭记录锁</p>
+</li>
+<li><p>进程终止，内核会自动关闭文件对象</p>
+<p>RAII的思想</p>
+</li>
+</ul>
+<h3 id="lseek"><a href="#lseek" class="headerlink" title="lseek"></a>lseek</h3><ul>
+<li>当前文件偏移量</li>
+<li>文件空洞</li>
+</ul>
+<h3 id="read"><a href="#read" class="headerlink" title="read"></a>read</h3><ul>
+<li>返回值 &lt; 待读字节数的情景<ul>
+<li>eof</li>
+<li>终端设备/行缓冲</li>
+<li>管道/FIFO</li>
+<li>中断</li>
+</ul>
+</li>
+</ul>
+<h3 id="write"><a href="#write" class="headerlink" title="write"></a>write</h3><ul>
+<li>返回值 &lt; 待写字节数的情景<ul>
+<li>磁盘满</li>
+<li>超过了给定进程的文件长度限制</li>
+</ul>
+</li>
+</ul>
+<h3 id="pread-pwrite"><a href="#pread-pwrite" class="headerlink" title="pread/pwrite"></a>pread/pwrite</h3><p>原子lseek + read/write</p>
+<h3 id="dup-dup2"><a href="#dup-dup2" class="headerlink" title="dup/dup2"></a>dup/dup2</h3><ul>
+<li><img src="https://i.loli.net/2021/10/08/I9dk2Rxzu4bLwXe.png" srcset="/img/loading.gif" lazyload alt="image-20211008212224736"></li>
+<li>新描述符的FD_CLOEXEC总是被清除 （即fd flag）</li>
+<li>dup(fd) = fcntl(fd, F_DUPFD, 0);</li>
+<li>dup2(fd) = close(fd2); fcntl(fd, F_DUPFD, fd2); //且为<strong>原子操作</strong></li>
+<li>dup 和 fcntl 的 errno 不同</li>
+</ul>
+<h3 id="sync-fsync-fdatasync"><a href="#sync-fsync-fdatasync" class="headerlink" title="sync/fsync/fdatasync"></a>sync/fsync/fdatasync</h3><ul>
+<li>内核维护高速缓存</li>
+<li>延迟写</li>
+<li>update守护进程周期性调用sync</li>
+</ul>
+<h3 id="fcntl（重点）"><a href="#fcntl（重点）" class="headerlink" title="fcntl（重点）"></a>fcntl（重点）</h3><p>#include&lt;fcntl.h&gt;</p>
+<p><strong>int fcntl(int fd, int cmd, … );</strong>  </p>
+<ul>
+<li><p>复制一个已有的描述符</p>
+<ul>
+<li>F_DUPFD/F_DUPFD_CLOEXEC</li>
+</ul>
+</li>
+<li><p>获取/设置文件描述符标志**(fd flag)**</p>
+<ul>
+<li><p>F_GETFD/F_SETFD</p>
+</li>
+<li><p>仅有的就是FD_CLOEXEC标志</p>
+<p>fcntl(fd, F_SETFD, 1);    默认为0，即不关闭</p>
+</li>
+</ul>
+</li>
+<li><p>获取/设置文件状态标志</p>
+<ul>
+<li><p>F_GETFL/F_SETFL</p>
+<p>==注意GETFL与GETFD的区别==</p>
+</li>
+</ul>
+</li>
+<li><p>获取/设置异步I/O所有权</p>
+<ul>
+<li>F_GETOWN/F_SETOWN</li>
+</ul>
+</li>
+<li><p>获取/设置记录锁</p>
+<ul>
+<li>F_GETLK/F_SETLK/F_SETLKW</li>
+</ul>
+</li>
+</ul>
+<h3 id="ioctl"><a href="#ioctl" class="headerlink" title="ioctl"></a>ioctl</h3><ul>
+<li><p>设备驱动</p>
+<p>某个特定操作的接口</p>
+</li>
+<li><p>类比于windows的 DeviceControl</p>
+<p>应用程序到设备驱动的万用接口</p>
+</li>
+</ul>
+<h1 id="4-文件和目录"><a href="#4-文件和目录" class="headerlink" title="4. 文件和目录"></a>4. 文件和目录</h1><h2 id="4-1-struct-stat"><a href="#4-1-struct-stat" class="headerlink" title="4.1 struct stat"></a>4.1 struct stat</h2><p>POSIX标准 + XSI扩展定义的字段</p>
+<p>描述一个特定文件相关的信息</p>
+<h3 id="linux下的struct-stat"><a href="#linux下的struct-stat" class="headerlink" title="linux下的struct stat"></a>linux下的struct stat</h3><ul>
+<li><p>st_mode</p>
+<ul>
+<li><p>文件类型</p>
+<table>
+<thead>
+<tr>
+<th>文件类型</th>
+<th>宏</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>普通文件 regular file</td>
+<td>S_ISREG()</td>
+</tr>
+<tr>
+<td>目录文件 directory file</td>
+<td>S_ISDIR()</td>
+</tr>
+<tr>
+<td>符号链接 symbolic link</td>
+<td>S_ISLINK()</td>
+</tr>
+<tr>
+<td>块特殊文件 block special file</td>
+<td>S_ISCHR()</td>
+</tr>
+<tr>
+<td>字符特殊文件 character special file</td>
+<td>S_ISBLK()</td>
+</tr>
+<tr>
+<td>FIFO 命名管道</td>
+<td>S_ISFIFO()</td>
+</tr>
+<tr>
+<td>socket</td>
+<td>S_ISSOCK()</td>
+</tr>
+<tr>
+<td>消息队列</td>
+<td>S_TYPEISMQ()</td>
+</tr>
+<tr>
+<td>信号量</td>
+<td>S_TYPEISEM()</td>
+</tr>
+<tr>
+<td>共享内存</td>
+<td>S_TYPEISSHM()</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>mode</p>
+<p>set-user-id bit            S_ISUID</p>
+<p>set-group-id bit         S_ISGID</p>
+<p>进程关联ID：</p>
+<ol>
+<li>实际用户/组ID</li>
+<li>有效用户/组ID  附属组ID</li>
+</ol>
+</li>
+<li><p>文件和目录的权限位</p>
+<ul>
+<li><code>S_ISUID</code>：执行时设置用户ID</li>
+<li><code>S_ISGID</code>：执行时设置组ID</li>
+<li><code>S_ISVTX</code>：粘着位</li>
+<li><code>S_IRWXU</code>：用户读、写和执行</li>
+<li><code>S_IRUSR</code>：用户读</li>
+<li><code>S_IWUSR</code>：用户写</li>
+<li><code>S_IXUSR</code>：用户执行</li>
+<li><code>S_IRWXG</code>：组读、写和执行</li>
+<li><code>S_IRGRP</code>：用户读</li>
+<li><code>S_IWGRP</code>：用户写</li>
+<li><code>S_IXGRP</code>：用户执行</li>
+<li><code>S_IRWXO</code>：其他读、写和执行</li>
+<li><code>S_IROTH</code>：用户读</li>
+<li><code>S_IWOTH</code>：用户写</li>
+<li><code>S_IXOTH</code>：用户执行</li>
+</ul>
+<p><img src="https://i.loli.net/2021/10/10/2q7eFnO8j6xHNyY.png" srcset="/img/loading.gif" lazyload alt="image-20211010161123024"></p>
+</li>
+<li><p>鉴权流程</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-2-文件系统"><a href="#4-2-文件系统" class="headerlink" title="4.2 文件系统"></a>4.2 文件系统</h2><h3 id="VFS"><a href="#VFS" class="headerlink" title="VFS"></a>VFS</h3><ul>
+<li>superblock</li>
+<li>incode<ul>
+<li>与文件一一对应，相当于身份证号</li>
+<li>包含文件的元数据，<strong>不包含名称</strong></li>
+<li>内存中的inode和磁盘中的inode</li>
+<li>名称-&gt;inode-&gt;disk block</li>
+</ul>
+</li>
+<li>dentry<ul>
+<li>文件的逻辑属性</li>
+<li>一个dentry对应一个inode</li>
+<li>多个dentry可能对应一个inode(硬链接/软链接)</li>
+</ul>
+</li>
+<li>file object</li>
+</ul>
+<h2 id="4-3-API"><a href="#4-3-API" class="headerlink" title="4.3 API"></a>4.3 API</h2><h3 id="状态相关"><a href="#状态相关" class="headerlink" title="状态相关"></a>状态相关</h3><ul>
+<li><p>stat / fstat / statat / lstat</p>
+</li>
+<li><p>ls - l命令</p>
+<p>注意是否跟踪符号链接</p>
+</li>
+</ul>
+<h3 id="权限相关"><a href="#权限相关" class="headerlink" title="权限相关"></a>权限相关</h3><ul>
+<li><p>access / faccessat</p>
+<p>探测文件是否存在</p>
+<p><strong>以实际用户</strong>ID和实际组ID测试访问能力</p>
+<p>faccessat提供了 AT_EACCESS  和 AT_SYMLINK_NOFOLLOW</p>
+</li>
+<li><p>umask</p>
+<p>创建新目录或文件时，屏蔽字中置1的权限都会被关闭</p>
+<p>区分umask命令</p>
+</li>
+<li><p>chmod / fchmod / fchmodat</p>
+<ul>
+<li>S_ISUID / S_ISGID</li>
+<li>S_IRWXU / S_IRWXG / S_IRWXO</li>
+<li>S_ISVTX(粘着位在linux无效)</li>
+</ul>
+</li>
+<li><p>chown / fchown / fchownat / lchown</p>
+<p>chown命令</p>
+<p>注意符号链接的处理</p>
+</li>
+</ul>
+<h3 id="变更相关"><a href="#变更相关" class="headerlink" title="变更相关"></a>变更相关</h3><ul>
+<li><p>truncate / ftruncate</p>
+<p>截断/扩充</p>
+</li>
+<li><p>link / linkat</p>
+</li>
+<li><p>unlink / unlinkat</p>
+<p>用于确保临时文件被删除</p>
+<p>标准库的remove</p>
+</li>
+<li><p>rename / renameat</p>
+<ul>
+<li>oldname 非目录<ul>
+<li>newname存在</li>
+<li>newname不存在</li>
+</ul>
+</li>
+<li>oldname 为目录<ul>
+<li>newname 存在</li>
+<li>newname 不存在</li>
+</ul>
+</li>
+<li>符号链接</li>
+<li>. 和 .. 不允许</li>
+</ul>
+</li>
+<li><p>symlink / symlinkat</p>
+</li>
+<li><p>readlink / readlinkat</p>
+<p>open的局限：不能打开link本身</p>
+</li>
+<li><p>mkdir / mkdirat</p>
+</li>
+<li><p>rmdir</p>
+</li>
+</ul>
+<h3 id="控制相关"><a href="#控制相关" class="headerlink" title="控制相关"></a>控制相关</h3><ul>
+<li><p>opendir /  fopendir </p>
+<p>readdir / rewinddir / closedir / telldir / seekdir </p>
+<p>类比文件/标准I/O的接口</p>
+</li>
+<li><p>chdir / fchdir</p>
+</li>
+<li><p>getcwd</p>
+</li>
+</ul>
+<h3 id="时间相关"><a href="#时间相关" class="headerlink" title="时间相关"></a>时间相关</h3><ul>
+<li>futimens</li>
+<li>utimensat</li>
+<li>utimes</li>
+</ul>
+<h1 id="5-标准I-O"><a href="#5-标准I-O" class="headerlink" title="5.标准I/O"></a>5.标准I/O</h1><p><strong>即ISO C标准I/O</strong></p>
+<h2 id="5-1-流-stream"><a href="#5-1-流-stream" class="headerlink" title="5.1 流 (stream)"></a>5.1 流 (stream)</h2><ul>
+<li><p>无缓冲I/O围绕fd展开</p>
+</li>
+<li><p>有缓冲I/O围绕stream展开</p>
+</li>
+<li><p>流的定向(stream’s orientation)</p>
+<ul>
+<li><p>单字节 字节定向</p>
+<p>byte flow                 ASCII</p>
+</li>
+<li><p>多字节 宽定向</p>
+<p>wide bytes flow      国际字符集  </p>
+</li>
+</ul>
+</li>
+<li><p>进程预定义流</p>
+<p>stdin / stdout /stderr</p>
+</li>
+<li><p>流缓冲</p>
+<ul>
+<li><p>意义</p>
+</li>
+<li><p>类型</p>
+<p>全缓冲：填满I/O缓冲区后才进行实际I/O操作</p>
+<p>行缓冲：</p>
+<ol>
+<li><p>输入输出遇到换行符时执行I/O操作</p>
+<pre><code>            2. 由于每行缓冲区固定，缓冲区满没有遇到换行符也要执行I/O
+            3.  任何时候只要通过标准lO库，要求从一个不带缓冲的流或者一个行缓冲的流(从内核请求数据的时机）得到输入数据，那么就会冲洗所有行缓冲输出流。(即要缓冲输入，先冲洗输出缓冲)
+            4. 指向终端的流通常使用行缓冲
+</code></pre>
+</li>
+</ol>
+<p>不带缓冲：不进行缓冲</p>
+</li>
+</ul>
+</li>
+<li><p>stdin 和 stdout 并不指向交互设备时，才能使全缓冲类型 (通过重定向)</p>
+<p>如果指向终端设备，则是行缓冲的，否则是全缓冲的</p>
+</li>
+<li><p><strong>stderr绝不能时全缓冲的，一般是不带缓冲</strong></p>
+<p>表现为buffersize = 1</p>
+</li>
+</ul>
+<h2 id="5-2-FILE对象"><a href="#5-2-FILE对象" class="headerlink" title="5.2 FILE对象"></a>5.2 FILE对象</h2><ul>
+<li>不同平台的实现不同</li>
+<li>linux<ul>
+<li>fd    用于实际I/O</li>
+<li>buffer指针  buffer尺寸  buffer当前字符数</li>
+<li>出错标志  文件结束标志</li>
+</ul>
+</li>
+</ul>
+<h2 id="5-3-API"><a href="#5-3-API" class="headerlink" title="5.3 API"></a>5.3 API</h2><ul>
+<li><p>fwide</p>
+</li>
+<li><p>setbuf / setvbuf    p118</p>
+</li>
+<li><p>fflush</p>
+</li>
+<li><p>fopen / freopen / fdopen</p>
+</li>
+<li><p>fclose</p>
+</li>
+<li><p>读写</p>
+<ul>
+<li>getc / fgetc /  getchar / ungetc</li>
+<li>putc / fputc / putchar</li>
+<li>fgets / (gets)</li>
+<li>fputs / (puts)</li>
+<li>fread / fwrite</li>
+</ul>
+</li>
+<li><p>ferror / feof / clearerr</p>
+</li>
+<li><p>ftell / ftello / fseek / fseeko / rewind</p>
+</li>
+<li><p>fgetpos / fsetpos</p>
+</li>
+<li><p>格式化输入输出</p>
+<ul>
+<li>printf / fprintf / dprintf / sprintf / snprintf</li>
+<li>scanf / fscanf / sscanf</li>
+</ul>
+</li>
+<li><p>fileno</p>
+<p>标准I/O到无缓冲I/O的adapter</p>
+</li>
+<li><p>tmpnam / tmpfile  临时文件</p>
+</li>
+<li><p>fmemopen  内存流</p>
+</li>
+</ul>
+<h1 id="6-系统信息"><a href="#6-系统信息" class="headerlink" title="6. 系统信息"></a>6. 系统信息</h1><h2 id="6-1-数据文件"><a href="#6-1-数据文件" class="headerlink" title="6.1 数据文件"></a>6.1 数据文件</h2><ul>
+<li><p>/etc/passwd</p>
+<ul>
+<li><p>pwd.h中定义了struct passwd结构</p>
+<p>可以任意由用户读取</p>
+</li>
+<li><p>是ASCII文件，可以用标准I/O读取，但是效率太低</p>
+<p>因此系统提供API接口</p>
+</li>
+</ul>
+</li>
+<li><p>/etc/group</p>
+<ul>
+<li>grp.h中定义了struct group结构</li>
+</ul>
+</li>
+<li><p>/etc/shadow</p>
+<ul>
+<li><p>经单向加密算法处理过的用户口令副本</p>
+</li>
+<li><p>shadow.h中定义了struct spwd</p>
+</li>
+<li><p>阴影口令文件 /etc/shadow 不应该由一般用户读取</p>
+<p>仅有少数几个程序需要访问加密口令,如login, passwd, 这些程序通常是设定 set-user-ID为root的程序</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="6-2-API"><a href="#6-2-API" class="headerlink" title="6.2 API"></a>6.2 API</h2><h3 id="6-2-1-数据文件"><a href="#6-2-1-数据文件" class="headerlink" title="6.2.1 数据文件"></a>6.2.1 数据文件</h3><ul>
+<li>getpwuid / getpwnam</li>
+<li>getpwent / setpwent / endpwent</li>
+<li>getspnam / getspent / setspent / endspent</li>
+<li>getgrgid / getgenam</li>
+<li>getgrent / setgrent / endgrent</li>
+<li>getgroups / setgroups / initgroups</li>
+</ul>
+<p><strong>返回的结构都是一个静态变量，会覆盖前一次的结果，数据文件的API都提供了 get / set / end 组合技</strong></p>
+<h3 id="6-2-2-系统信息"><a href="#6-2-2-系统信息" class="headerlink" title="6.2.2 系统信息"></a>6.2.2 系统信息</h3><ul>
+<li><p>uname</p>
+<p>struct utsname</p>
+</li>
+<li><p>gethostname</p>
+</li>
+<li><p>time</p>
+<p>日历时间</p>
+</li>
+<li><p>clock_gettime</p>
+<p>获取指定的时钟类型的时间</p>
+<ol>
+<li>实时系统时间</li>
+<li>不带负跳数的实时系统时间</li>
+<li>调用进程的CPU时间</li>
+<li>调用线程的CPU时间</li>
+</ol>
+</li>
+<li><p>clock_getres</p>
+<p>时间精度调整</p>
+</li>
+<li><p>clock_settime</p>
+<p>对特定的时钟设置时间（某些需要权限）</p>
+</li>
+<li><p>gettimeofday (deprecate)</p>
+</li>
+<li><p>gmtime / localtime</p>
+<p>日历时间转换为struct tm 结构</p>
+</li>
+<li><p>mktime</p>
+</li>
+<li><p>strftime / strftime_l</p>
+<p>格式化时间，打印字符串</p>
+</li>
+<li><p>strptime</p>
+</li>
+</ul>
+<h1 id="7-进程环境"><a href="#7-进程环境" class="headerlink" title="7. 进程环境"></a>7. 进程环境</h1><h2 id="7-1概念"><a href="#7-1概念" class="headerlink" title="7.1概念"></a>7.1概念</h2><h3 id="1进程终止"><a href="#1进程终止" class="headerlink" title="1进程终止"></a>1进程终止</h3><ul>
+<li><p>从main返回</p>
+<p>exit(main(argc, argv))</p>
+<p>return 和 exit(0) 并无区别</p>
+</li>
+<li><p>exit()库函数</p>
+</li>
+<li><p>_exit / _Exit 系统调用</p>
+</li>
+<li><p>这两者区别： 不同标准定义 、是否做了清理工作</p>
+</li>
+<li><p><img src="https://i.loli.net/2021/10/12/6ILPQsK8ROXj5CF.png" srcset="/img/loading.gif" lazyload alt="image-20211012235649755"></p>
+</li>
+</ul>
+<h3 id="2-终止处理程序"><a href="#2-终止处理程序" class="headerlink" title="2 终止处理程序"></a>2 终止处理程序</h3><ul>
+<li><p>atexit函数</p>
+<p>事先声明，反向调用，类似栈</p>
+</li>
+</ul>
+<h3 id="3-命令行参数"><a href="#3-命令行参数" class="headerlink" title="3 命令行参数"></a>3 命令行参数</h3><ul>
+<li><p>argc  argv</p>
+</li>
+<li><p>envp   环境表</p>
+<p>全局变量   environ</p>
+<p><img src="https://i.loli.net/2021/10/12/qnl1Hc9s4xKOfUY.png" srcset="/img/loading.gif" lazyload alt="image-20211012235941033"></p>
+<ul>
+<li>函数 getenv / putenv</li>
+<li>一般调用函数获取环境，而非读取environ</li>
+</ul>
+</li>
+<li><p>进程地址空间</p>
+<p><img src="https://i.loli.net/2021/10/13/9X1HA2xE8dQ7TrI.png" srcset="/img/loading.gif" lazyload alt="image-20211013000146968"></p>
+<p>.text / .data / .bss / stack / heap / others (so , debug , systab )</p>
+</li>
+</ul>
+<h3 id="4-跨越函数跳转"><a href="#4-跨越函数跳转" class="headerlink" title="4 跨越函数跳转"></a>4 跨越函数跳转</h3><ul>
+<li>setjmp / longjmp</li>
+<li>靠返回值val与正常函数调用区分</li>
+</ul>
+<h3 id="5-进程资源限制"><a href="#5-进程资源限制" class="headerlink" title="5 进程资源限制"></a>5 进程资源限制</h3><ul>
+<li>getrlimit / setrlimit</li>
+</ul>
+<h2 id="7-2-API"><a href="#7-2-API" class="headerlink" title="7.2 API"></a>7.2 API</h2><ul>
+<li>exit / _Exit / _exit</li>
+<li>atexit</li>
+<li>getenv / putenv / setenv / unsetenv / clearenv</li>
+<li>setjmp / longjmp</li>
+</ul>
+<h1 id="8-进程控制"><a href="#8-进程控制" class="headerlink" title="8. 进程控制"></a>8. 进程控制</h1><h2 id="8-1-概念"><a href="#8-1-概念" class="headerlink" title="8.1 概念"></a>8.1 概念</h2><h3 id="进程ID"><a href="#进程ID" class="headerlink" title="进程ID"></a>进程ID</h3><ul>
+<li><p>循环复用</p>
+</li>
+<li><p>特殊的进程ID</p>
+<ul>
+<li><p>swapper：0    内核交换进程</p>
+</li>
+<li><p>init：1</p>
+<p>普通用户进程</p>
+<p>超级用户特权</p>
+<p>所有孤儿进程的父进程</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h3><h4 id="一次调用两次返回"><a href="#一次调用两次返回" class="headerlink" title="一次调用两次返回"></a>一次调用两次返回</h4><ul>
+<li><p>父进程中返回创建的子进程ID</p>
+</li>
+<li><p>子进程返回0</p>
+<p>getppid ( get parent id) 获取父进程ID</p>
+</li>
+<li><p>父子进程谁先执行不确定</p>
+</li>
+</ul>
+<h4 id="子进程是父进程的副本"><a href="#子进程是父进程的副本" class="headerlink" title="子进程是父进程的副本"></a>子进程是父进程的副本</h4><ul>
+<li><p>拷贝数据空间、堆、栈</p>
+<p>COW （copy on write）写时复制</p>
+<p>试图修改时才真正拷贝</p>
+<p>fork + exec 从中受益</p>
+</li>
+<li><p>代码段共享 （只读）</p>
+</li>
+<li><p>拷贝文件描述符表</p>
+<p><img src="https://i.loli.net/2021/10/13/NQ7HU8TExiwOo3J.png" srcset="/img/loading.gif" lazyload alt="image-20211013001243684"></p>
+</li>
+<li><p>继承父进程相关属性</p>
+<p>实际用户ID、实际组ID、有效用户ID、有效组ID 附属组ID 进程组ID 会话ID 控制终端 设置用户ID标识和设置组ID标识 当前工作目录 根目录 文件模式创建屏蔽字 信号屏蔽和安排 对任一打开文件描述符的执行时关闭(close-on-exec)标识 环境变量 连接的共享存储段 存储映像 资源限制</p>
+</li>
+<li><p>父子进程的不同之处</p>
+<ul>
+<li>ID / PID</li>
+<li>子进程tms_utime/tms_stime/tms_cutime/tms_ustime被清零</li>
+<li><strong>子进程不继承父进程文件锁</strong></li>
+<li>子进程未处理闹钟将被清除</li>
+<li>子进程未处理信号集设置为空集</li>
+</ul>
+</li>
+</ul>
+<h3 id="父子进程的生死交互"><a href="#父子进程的生死交互" class="headerlink" title="父子进程的生死交互"></a>父子进程的生死交互</h3><h4 id="子进程先于父进程终止"><a href="#子进程先于父进程终止" class="headerlink" title="子进程先于父进程终止"></a>子进程先于父进程终止</h4><ul>
+<li><p>通过信号SIGCHILD发送退出状态给父进程</p>
+</li>
+<li><p>父进程可以通过wait / waitpid获取信息</p>
+<p>子进程ID / 子进程终止状态 / CPU耗时</p>
+</li>
+<li><p>未善后的终止子进程为僵死进程（zombie）</p>
+</li>
+</ul>
+<h4 id="父进程先于子进程终止"><a href="#父进程先于子进程终止" class="headerlink" title="父进程先于子进程终止"></a>父进程先于子进程终止</h4><ul>
+<li><p>子进程父亲改为init 进程（pid 1）</p>
+</li>
+<li><p>init进程会调用wait善后处理终止的子进程（防止全是zombie）</p>
+</li>
+<li><p>wait / waitpid</p>
+<ul>
+<li><p>如果所有子进程都还在运行，则阻塞</p>
+</li>
+<li><p>如果一个子进程终止，正等待父进程获取其终止状态，则取得终止状态立即返回（zombie状态也立即返回）</p>
+</li>
+<li><p>如果没有任何子进程则出错返回</p>
+</li>
+<li><p>waitpid功能补充</p>
+<p>支持异步（需要设置options参数）</p>
+<p>可选择性等待某个进程</p>
+<p>​    pid == -1 / 0 / &gt;0 / &lt;-1</p>
+</li>
+</ul>
+</li>
+<li><p>更灵活的wait系列函数</p>
+</li>
+</ul>
+<h3 id="exec族函数"><a href="#exec族函数" class="headerlink" title="exec族函数"></a>exec族函数</h3><ul>
+<li><p>更进一步的封装</p>
+<ul>
+<li><p>popen</p>
+</li>
+<li><p>system</p>
+<p>fork -&gt; exec -&gt; waitpid</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h3><ul>
+<li>实际用户 / 组ID</li>
+<li>有效用户 / 组ID</li>
+<li>setuid / setgid<ul>
+<li>进程拥有超级权限，二话不说直接改实际用户/组ID、有效用户/组ID为指定ID </li>
+<li>如果没有超级权限，但是uid或gid设置为实际用户/组ID或保存的设置用户/组ID， 则只将有效用户/组ID改为指定ID </li>
+<li>不满足前两条，通通返回错误(ret = -1, error = EPERM)</li>
+</ul>
+</li>
+</ul>
+<h3 id="解释器文件"><a href="#解释器文件" class="headerlink" title="解释器文件"></a>解释器文件</h3><ul>
+<li>解释型语言源文件起始行标注</li>
+</ul>
+<h3 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h3><ul>
+<li><p>优先级</p>
+</li>
+<li><p>nice</p>
+<p>0~2*NZERO-1 sysconf获取</p>
+<p>越大越低</p>
+</li>
+<li><p>getpriority setpriority</p>
+</li>
+</ul>
+<h3 id="进程时间-1"><a href="#进程时间-1" class="headerlink" title="进程时间"></a>进程时间</h3><ul>
+<li>时钟时间 </li>
+<li>用户CPU时间 </li>
+<li>系统CPU时间 </li>
+<li>times</li>
+</ul>
+<h1 id="8-2-API"><a href="#8-2-API" class="headerlink" title="8.2 API"></a>8.2 API</h1><ul>
+<li>getpid getppid getuid geteuid getgid getegid</li>
+<li>fork vfork</li>
+<li>wait waitpid</li>
+<li>waitid</li>
+<li>wait3/wait4</li>
+<li>execl execv execle execve execlp execvp fexecve</li>
+<li>setuid/setgid</li>
+<li>seteuid/setegid</li>
+<li>system</li>
+<li>nice</li>
+<li>getpriority/setpriority</li>
+<li>times</li>
+</ul>
+<h1 id="9-进程关系"><a href="#9-进程关系" class="headerlink" title="9. 进程关系"></a>9. 进程关系</h1><h2 id="9-1-概念"><a href="#9-1-概念" class="headerlink" title="9.1 概念"></a>9.1 概念</h2><h3 id="终端"><a href="#终端" class="headerlink" title="终端"></a>终端</h3><p><img src="https://i.loli.net/2021/10/15/pDU7nBhWYsqKtjm.png" srcset="/img/loading.gif" lazyload alt="image-20211015155106020"></p>
+<ul>
+<li><p>tty1-6</p>
+<p>CTRL ALT F1-6</p>
+</li>
+<li><p>图形终端</p>
+<p>ALT F7</p>
+</li>
+<li><p>pseudo tty（pty） 网络终端</p>
+</li>
+</ul>
+<h3 id="进程组（作业job）"><a href="#进程组（作业job）" class="headerlink" title="进程组（作业job）"></a>进程组（作业job）</h3><ul>
+<li><p>唯一标志ID</p>
+<ul>
+<li><p>getpgrp / getpgid</p>
+</li>
+<li><p>setpgid</p>
+<p><strong>进程只能为自己和它的子进程设置进程组ID</strong></p>
+</li>
+<li><p>唯一标志ID和组长的PID一致</p>
+</li>
+</ul>
+</li>
+<li><p>多个进程的集合，每个进程都有所属的进程组</p>
+</li>
+<li><p>同一进程组的所有进程接受同一终端的各种信号</p>
+</li>
+<li><p><strong>孤儿进程组</strong></p>
+<p>每个成员的父亲要么在本组，要么在其他会话中</p>
+</li>
+</ul>
+<h3 id="会话"><a href="#会话" class="headerlink" title="会话"></a>会话</h3><ul>
+<li><p>可以有0或一个控制终端（tty / pseudo tty)</p>
+<p>建立与控制终端连接的会话首进程被称为控制进程</p>
+<p>无控制终端可能为守护进程</p>
+</li>
+<li><p>一个到多个进程组的集合</p>
+<ul>
+<li><p>一个前台进程</p>
+<p>这意味着会话有一个控制终端</p>
+<p>接受 ctrl c / ctrl \ 产生的 SIGINT /  SIGQUIT 信号</p>
+</li>
+<li><p>n个后台进程组</p>
+</li>
+<li><p><img src="https://i.loli.net/2021/10/15/qJIVv3AE1sRPOQm.png" srcset="/img/loading.gif" lazyload alt="image-20211015154131834"></p>
+</li>
+</ul>
+</li>
+<li><p>新建会话 setsid</p>
+<ul>
+<li><p>该进程变成新会话的会话首进程 (session leader)</p>
+<p>此时该 leader 是会话中的唯一进程</p>
+<p>这意味这<strong>要新建会话 要先 fork 再 setsid</strong>     这就保证了进程不是进程组的组长</p>
+</li>
+<li><p>该进程成为一个新进程组的组长进程</p>
+<p>新进程组ID是调用进程的进程ID</p>
+<p>也是会话ID</p>
+</li>
+<li><p>该进程没有控制终端</p>
+<p>如果调用 setsid 前有控制终端，则切断联系</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="作业控制"><a href="#作业控制" class="headerlink" title="作业控制"></a>作业控制</h3><p><img src="https://i.loli.net/2021/10/15/lSc1txX8ZjoD2sv.png" srcset="/img/loading.gif" lazyload alt="image-20211015155022811"></p>
+<h2 id="9-2-API"><a href="#9-2-API" class="headerlink" title="9.2 API"></a>9.2 API</h2><ul>
+<li>getpgrp / getpgid / sepgid</li>
+<li>setsid / getsid</li>
+<li>tcgetpgrp / tcsetpgrp / tcgetsid</li>
+</ul>
+<h1 id="10-信号"><a href="#10-信号" class="headerlink" title="10. 信号"></a>10. 信号</h1><h2 id="10-1-概念"><a href="#10-1-概念" class="headerlink" title="10.1 概念"></a>10.1 概念</h2><h3 id="异步事件"><a href="#异步事件" class="headerlink" title="异步事件"></a>异步事件</h3><ul>
+<li>信号的产生是不定时的，随机的</li>
+<li>可以简单理解为用户态的中断（软中断）</li>
+</ul>
+<h3 id="产生信号的方式"><a href="#产生信号的方式" class="headerlink" title="产生信号的方式"></a>产生信号的方式</h3><ul>
+<li>用户按键产生（ctrl C）</li>
+<li>硬件异常产生</li>
+<li>进程或者用户调用kill</li>
+<li>但检测到某种软性条件已经发生，通知有关进程<ul>
+<li>SIGURG / SIGPIPE / SIGALARM / SIGABRT</li>
+</ul>
+</li>
+</ul>
+<h3 id="进程处理信号的方式"><a href="#进程处理信号的方式" class="headerlink" title="进程处理信号的方式"></a>进程处理信号的方式</h3><ul>
+<li><p>忽略 ignore</p>
+<ul>
+<li>大多数信号的默认处理方式</li>
+<li>SIGKILL / SIGSTOP 不能被忽略</li>
+<li>由硬件异常导致的信号最好不要被忽略</li>
+<li>中断允许嵌套，但是一般终端过程中同一个中断会忽略</li>
+</ul>
+</li>
+<li><p>捕捉 catch</p>
+<ul>
+<li>注册一个signal handler</li>
+<li>信号到来时会打断当前执行流，转而去执行handler</li>
+<li>不能捕捉SIGKILL / SIGSTOP</li>
+</ul>
+</li>
+<li><p>执行默认动作</p>
+<p><img src="https://i.loli.net/2021/10/13/oRPtp3KE8DM6zXm.png" srcset="/img/loading.gif" lazyload alt="image-20211013234629726"></p>
+</li>
+<li><p>函数 signal / sigaction</p>
+</li>
+<li><p>子进程继承了父进程处理信号的方式</p>
+</li>
+</ul>
+<h3 id="被中断的系统调用"><a href="#被中断的系统调用" class="headerlink" title="被中断的系统调用"></a>被中断的系统调用</h3><ul>
+<li><p>低速系统调用</p>
+<p>可能会使进程永久阻塞的一类</p>
+</li>
+<li><p>出错返回</p>
+<p>errno EINTR</p>
+</li>
+<li><p>自动重新启动的系统调用</p>
+<p>ioctl read/readv write/writev wait/waitpid</p>
+</li>
+</ul>
+<h3 id="可重入函数"><a href="#可重入函数" class="headerlink" title="可重入函数"></a>可重入函数</h3><ul>
+<li><p>异步信号安全</p>
+<p><img src="https://i.loli.net/2021/10/13/mTB6qjaRNg81KUw.png" srcset="/img/loading.gif" lazyload alt="image-20211013235025005"></p>
+</li>
+<li><p>不可重入的情况</p>
+<p>static静态变量</p>
+<p>global全局变量</p>
+<p>调用了不可重入函数</p>
+</li>
+<li><p>malloc是线程安全的（递归锁），但是维护共享内存，故是不可重入的</p>
+</li>
+</ul>
+<h3 id="可靠信号"><a href="#可靠信号" class="headerlink" title="可靠信号"></a>可靠信号</h3><ul>
+<li><p>未决的 pending<br>产生信号和送达之间</p>
+</li>
+<li><p>信号屏蔽字 signal mask （signal procmask）</p>
+<ul>
+<li>进程可以阻塞某种信号递送sigpending<ul>
+<li>保持未决状态</li>
+<li>直到进程接触阻塞或设置为忽略才送达</li>
+<li>阻塞期间同一个信号触发多次（是否排队：sigqueue）</li>
+</ul>
+</li>
+<li>sigsuspend 解除了 使用 sigprocmask 和 pause 组合 的原子性问题</li>
+</ul>
+</li>
+<li><p>信号集 sigset_t</p>
+<p>相关api ： sigemptyset / sigfillset / sigaddset / sigdelset / sigismember</p>
+<p>与 sigprocmask 相配合</p>
+</li>
+</ul>
+<h3 id="递送信号"><a href="#递送信号" class="headerlink" title="递送信号"></a>递送信号</h3><ul>
+<li><p>kill  / raise 库函数</p>
+</li>
+<li><p>kill命令</p>
+</li>
+<li><p>定时器</p>
+<p>alarm：SIGALARM  默认动作为终止进程</p>
+<p>一个进程只能有一个定时器</p>
+</li>
+</ul>
+<h3 id="睡眠"><a href="#睡眠" class="headerlink" title="睡眠"></a>睡眠</h3><ul>
+<li>sleep / nanosleep / clock_nanosleep</li>
+</ul>
+<h3 id="进程控制的延申"><a href="#进程控制的延申" class="headerlink" title="进程控制的延申"></a>进程控制的延申</h3><ul>
+<li>信号做父子进程的同步</li>
+<li>加入信号处理的system实现</li>
+</ul>
+<h3 id="非局部跳出（deprecated）"><a href="#非局部跳出（deprecated）" class="headerlink" title="非局部跳出（deprecated）"></a>非局部跳出（deprecated）</h3><ul>
+<li><p>sigsetjmp / siglongjmp</p>
+</li>
+<li><p>对比 setjmp / longjmp</p>
+<p>handler自动屏蔽某种信号</p>
+<p>跳走后无法保存信号屏蔽字</p>
+</li>
+</ul>
+<h1 id="10-2-API"><a href="#10-2-API" class="headerlink" title="10.2 API"></a>10.2 API</h1><ul>
+<li><p>signal</p>
+</li>
+<li><p>kill / raise</p>
+</li>
+<li><p>alarm</p>
+</li>
+<li><p>pause</p>
+</li>
+<li><p>sigemptyset / sigfillset / sigaddset / sigdelset / sigismember</p>
+</li>
+<li><p>sigprocmask / sigpending</p>
+</li>
+<li><p>sigsetjmp / siglongjmp</p>
+</li>
+<li><p>sigsuspend</p>
+<p>信号屏蔽字被设置为sigmask指向的值然后挂起，在捕捉一个信号之后返回恢复原来的sigmask </p>
+</li>
+<li><p>abort</p>
+</li>
+</ul>
+<h1 id="11-线程"><a href="#11-线程" class="headerlink" title="11. 线程"></a>11. 线程</h1><h2 id="11-1-进程与线程的概念"><a href="#11-1-进程与线程的概念" class="headerlink" title="11.1 进程与线程的概念"></a>11.1 进程与线程的概念</h2><ul>
+<li>进程是资源分配的最小单位，线程是程序执行的最小单位（资源调度的最小单位）</li>
+<li>进程有自己的独立地址空间，线程是共享进程的地址空间</li>
+<li>线程之间通信更方便，进程则要通过各种IPC机制</li>
+<li>多进程更加健壮，一个进程异常挂掉不会导致其他进程挂掉</li>
+</ul>
+<h2 id="11-2-多线程与多核"><a href="#11-2-多线程与多核" class="headerlink" title="11.2 多线程与多核"></a>11.2 多线程与多核</h2><ul>
+<li>单核也可以多线程</li>
+<li>多核多线程可以达成同时run的效果</li>
+</ul>
+<h2 id="11-3-pthread标准"><a href="#11-3-pthread标准" class="headerlink" title="11.3 pthread标准"></a>11.3 pthread标准</h2><ul>
+<li><p>POSIX 线程</p>
+<p>LinuxThreads的变化（NPTL）</p>
+</li>
+</ul>
+<h2 id="11-4-线程信息"><a href="#11-4-线程信息" class="headerlink" title="11.4 线程信息"></a>11.4 线程信息</h2><p><strong>以下不共享</strong></p>
+<ul>
+<li><p>线程ID</p>
+<p>pthread_t / pthread_equal / pthread_self</p>
+</li>
+<li><p>栈</p>
+</li>
+<li><p>信号屏蔽字</p>
+</li>
+<li><p>调度优先级</p>
+</li>
+<li><p>errno变量</p>
+</li>
+<li><p>线程私有数据</p>
+</li>
+</ul>
+<h2 id="11-5-线程的生与死"><a href="#11-5-线程的生与死" class="headerlink" title="11.5 线程的生与死"></a>11.5 线程的生与死</h2><h3 id="线程创建"><a href="#线程创建" class="headerlink" title="线程创建"></a>线程创建</h3><ul>
+<li><p>pthread_creat<strong>e</strong></p>
+</li>
+<li><p>线程创建不能保证哪个线程会先运行</p>
+</li>
+<li><p>线程继承调用线程的浮点环境和信号屏蔽字</p>
+<p>但是 pending 信号集会被清除</p>
+</li>
+</ul>
+<h3 id="线程终止"><a href="#线程终止" class="headerlink" title="线程终止"></a>线程终止</h3><ul>
+<li><p>导致进程终止</p>
+<ul>
+<li>任意线程调用 exit / _exit / _Exit</li>
+<li>发送给线程的信号（默认终止进程）</li>
+</ul>
+</li>
+<li><p>单一线程终止</p>
+<ul>
+<li><p>线程从启动历程返回</p>
+<p>pthread_join / pthread_datch</p>
+</li>
+<li><p>线程被同一进程的其他线程取消</p>
+<p>pthread_cancel</p>
+</li>
+<li><p>线程调用 pthread_exit</p>
+</li>
+</ul>
+</li>
+<li><p>线程清理处理程序</p>
+<ul>
+<li>pthread_cleanup_push / pthread_cleanup_pop</li>
+<li>清理情况：<ul>
+<li>主动调用 pthread_exit</li>
+<li>响应 pthread_cancel</li>
+<li>调用 pthread_cleanup_pop 参数不为0的时候</li>
+</ul>
+</li>
+<li>直接 return 并不会执行清理</li>
+<li>执行顺序与注册顺序相反</li>
+</ul>
+</li>
+</ul>
+<h2 id="11-6-进程与线程原语"><a href="#11-6-进程与线程原语" class="headerlink" title="11.6 进程与线程原语"></a>11.6 进程与线程原语</h2><table>
+<thead>
+<tr>
+<th>进程原语</th>
+<th>线程原语</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>fork</td>
+<td>pthread_create</td>
+<td>创建新的控制流</td>
+</tr>
+<tr>
+<td>exit</td>
+<td>pthread_exit</td>
+<td>从现有的控制流中退出</td>
+</tr>
+<tr>
+<td>waitpid</td>
+<td>pthread_join</td>
+<td>从控制流中得到退出状态</td>
+</tr>
+<tr>
+<td>atexit</td>
+<td>pthread_cancel_push</td>
+<td>注册在退出控制流时调用的函数</td>
+</tr>
+<tr>
+<td>getpid</td>
+<td>pthread_self</td>
+<td>获取控制流的ID</td>
+</tr>
+<tr>
+<td>abort</td>
+<td>pthread_cancel</td>
+<td>请求控制流的非正常退出</td>
+</tr>
+</tbody></table>
+<h2 id="11-7-线程同步、一致性问题"><a href="#11-7-线程同步、一致性问题" class="headerlink" title="11.7 线程同步、一致性问题"></a>11.7 线程同步、一致性问题</h2><h3 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h3><h3 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h3><ul>
+<li><p>POSIX互斥量</p>
+<p>struct pthread_mutex_t</p>
+<ul>
+<li><p>初始化/销毁</p>
+<p>pthread_mutex_init / pthread_mutex_destory</p>
+</li>
+<li><p>上锁</p>
+<p>pthread_mutex_lock / pthread_mutex_timedlock / pthread_mutex_trylock / pthread_mutex_unlock</p>
+</li>
+<li><p>解锁</p>
+<p>pthread_mutex_unlock</p>
+</li>
+</ul>
+</li>
+<li><p>死锁</p>
+<ul>
+<li><p>AB型死锁</p>
+<p>解决方法：</p>
+<ol>
+<li>按序获取锁（程序复杂）</li>
+<li>trylock / timedlock</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="读写锁-共享互斥锁"><a href="#读写锁-共享互斥锁" class="headerlink" title="读写锁(共享互斥锁)"></a>读写锁(共享互斥锁)</h3><ul>
+<li><p>状态</p>
+<ul>
+<li><p>读锁：读请求 pass ，写请求阻塞直到读锁释放（共享锁）</p>
+<p>引用计数实现</p>
+<p>注意写请求的饥饿情况，通常写请求后的读请求被阻塞（FIFO)</p>
+</li>
+<li><p>写锁：阻塞任何的加锁请求（互斥锁）</p>
+</li>
+<li><p>无锁</p>
+</li>
+</ul>
+</li>
+<li><p>一次只有一个线程可以占有写锁，可以有多个线程同时占有读锁</p>
+</li>
+<li><p>适用于读请求&gt;&gt;写请求的情况</p>
+</li>
+<li><p>POSIX读写锁</p>
+<ul>
+<li><p>初始化 / 销毁</p>
+<p>pthread_rwlock_init / pthread_rwlock_destroy</p>
+</li>
+<li><p>读锁</p>
+<p>pthread_rwlock_rdlock / pthread_rwlock_tryrdlock / pthread_rwlock_timedrdlock</p>
+</li>
+<li><p>写锁</p>
+<p>pthread_rwlock_wrlock / pthread_rwlock_trywrlock / pthread_rwlock_timedwrlock</p>
+</li>
+<li><p>解锁</p>
+<p>pthread_rwlock_unlock</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="条件变量"><a href="#条件变量" class="headerlink" title="条件变量"></a>条件变量</h3><ul>
+<li><p>配合互斥量使用，提供多线程会合的时间点</p>
+</li>
+<li><p>初始化 / 销毁</p>
+<p>pthread_cond_init / pthread_cond_destroy</p>
+</li>
+<li><p>等待条件变量变为true</p>
+<p>pthread_cond_wait / pthread_cond_timedwait</p>
+</li>
+<li><p>条件变量置信</p>
+<p>pthread_cond_signal 唤醒一个 / pthread_cond_broadcast 唤醒所有</p>
+</li>
+</ul>
+<h3 id="自旋锁-spinlock"><a href="#自旋锁-spinlock" class="headerlink" title="自旋锁 spinlock"></a>自旋锁 spinlock</h3><ul>
+<li>特征：忙等阻塞</li>
+<li>锁持有时间段，线程不希望被调度</li>
+<li>用户态基本不使用自旋锁</li>
+<li>不要调用在持有自旋锁的情况下可能会进入休眠状态的函数</li>
+</ul>
+<h3 id="屏障-barrier"><a href="#屏障-barrier" class="headerlink" title="屏障 barrier"></a>屏障 barrier</h3><ul>
+<li><p>协调多个进程并行工作</p>
+<p>每个线程等待，直到所有线程共同达到某一点</p>
+</li>
+<li><p>初始化 / 销毁</p>
+<p>pthread_barrier_init / pthread_barrier_destory</p>
+</li>
+<li><p>等待</p>
+<p>pthread_barrier_wait</p>
+<p>未满足屏障计数时阻塞 、满足屏障计数时唤醒所有（最后一个线程）</p>
+</li>
+</ul>
+<h1 id="12-线程控制"><a href="#12-线程控制" class="headerlink" title="12. 线程控制"></a>12. 线程控制</h1><h2 id="12-1-属性"><a href="#12-1-属性" class="headerlink" title="12.1 属性"></a>12.1 属性</h2><h3 id="pthread遵循的对于属性的模式"><a href="#pthread遵循的对于属性的模式" class="headerlink" title="pthread遵循的对于属性的模式"></a>pthread遵循的对于属性的模式</h3><ol>
+<li>每个对象都和自己类型的属性对象相关联（互斥量与互斥量属性相关联，线程与线程属性相关联），表现为 attr 指针，每个属性对象可以代表多个属性。属性对应用不透明，便于提高可移植性，因此需要函数来进行管理</li>
+<li>每个属性对象有一个初始化函数，它把属性设置为默认值</li>
+<li>还有一个销毁属性对象的函数，用于释放与属性对象的资源</li>
+<li>获取各个属性值的函数，返回存储它的内存单元</li>
+<li>设置属性值的函数，一般来说属性作为参数用指针传递</li>
+</ol>
+<h3 id="线程属性"><a href="#线程属性" class="headerlink" title="线程属性"></a>线程属性</h3><ul>
+<li><p>初始化 / 销毁</p>
+<p>pthread_attr_init / pthread_attr_destory</p>
+</li>
+<li><p>线程分离状态属性(分离线程的资源在线程终止时立即收回，无法用 join 等待其终止状态)</p>
+<p>pthread_attr_getdetachstate / pthread_attr_setdetachstate</p>
+</li>
+<li><p>以下不建议用</p>
+<p>pthread_attr_getguardsize / pthread_attr_setguardsize</p>
+<p>pthread_attr_getstacksize / pthread_attr_setstacksize</p>
+<p>pthread_attr_getstack / pthread_attr_setstack</p>
+</li>
+<li><p>取消状态（取消点）不建议用</p>
+<p>PTHREAD_CANCEL_ENABLE / PTHREAD_CANCEL_DISABLE </p>
+<p>pthread_setcancelstate</p>
+<p>被取消线程在调用点会感知到取消 (pthread_cancel调用方不等待)</p>
+<p>默认情况延迟取消</p>
+</li>
+</ul>
+<h3 id="同步属性"><a href="#同步属性" class="headerlink" title="同步属性"></a>同步属性</h3><h4 id="互斥量属性-pthread-mutexattr-t"><a href="#互斥量属性-pthread-mutexattr-t" class="headerlink" title="互斥量属性 pthread_mutexattr_t"></a>互斥量属性 pthread_mutexattr_t</h4><p><del>共享属性、健壮属性</del>、类型属性</p>
+<ul>
+<li><p>pthread_mutexattr_init / pthread_mutexattr_destroy</p>
+</li>
+<li><p>以下不建议使用</p>
+<ul>
+<li><p>进程共享(内核开销大，不属于NPTL)</p>
+<p>pthread_mutexattr_getpshared / pthread_mutexattr_setpshared</p>
+</li>
+<li><p>健壮属性</p>
+</li>
+<li><p><strong>类型属性</strong></p>
+<ul>
+<li><p>pthread_mutexattr_gettype / pthread_mutexattr_settype</p>
+</li>
+<li><table>
+<thead>
+<tr>
+<th>互斥量类型</th>
+<th>递归上锁</th>
+<th>不占用时解锁</th>
+<th>已解锁时解锁</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PTHREAD_MUTEX_NORMAL</td>
+<td>死锁</td>
+<td>未定义</td>
+<td>未定义</td>
+</tr>
+<tr>
+<td>PTHREAD_MUTEX_ERRORCHECK</td>
+<td>返回错误</td>
+<td>返回错误</td>
+<td>返回错误</td>
+</tr>
+<tr>
+<td>PTHREAD_MUTEX_RECURSIVE</td>
+<td>允许</td>
+<td>返回错误</td>
+<td>返回错误</td>
+</tr>
+<tr>
+<td>PTHREAD_MUTEX_DEFAULT</td>
+<td>未定义</td>
+<td>未定义</td>
+<td>未定义</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>递归锁的使用场景</p>
+<p><img src="https://i.loli.net/2021/10/15/adhHkbEo9LBI1gC.png" srcset="/img/loading.gif" lazyload alt="image-20211015230742334"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="读写锁属性-pthread-rwlockattr-t"><a href="#读写锁属性-pthread-rwlockattr-t" class="headerlink" title="读写锁属性 pthread_rwlockattr_t"></a>读写锁属性 pthread_rwlockattr_t</h4><ul>
+<li>pthread_rwlockattr_init / pthread_rwlockattr_destroy</li>
+<li>pthread_rwlockattr_getpshared / pthread_rwlockattr_setpshared</li>
+</ul>
+<h4 id="条件变量属性-pthread-condattr-t"><a href="#条件变量属性-pthread-condattr-t" class="headerlink" title="条件变量属性 pthread_condattr_t"></a>条件变量属性 pthread_condattr_t</h4><ul>
+<li>pthread_condattr_init / pthread_condattr_destroy</li>
+<li>pthread_condattr_getpshared / pthread_condattr_setpshared</li>
+</ul>
+<h4 id="屏障属性-pthread-barrierattr-t"><a href="#屏障属性-pthread-barrierattr-t" class="headerlink" title="屏障属性 pthread_barrierattr_t"></a>屏障属性 pthread_barrierattr_t</h4><ul>
+<li>pthread_barrierattr_init / pthread_barrierattr_destroy</li>
+<li>pthread_barrierattr_getpshared / pthread_barrierattr_setpshared</li>
+</ul>
+<h2 id="12-2-重入"><a href="#12-2-重入" class="headerlink" title="12.2 重入"></a>12.2 重入</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ul>
+<li><p>如果一个函数对多个线程来说时可重入的，就说这个函数是线程安全的。但并不能说明对信号处理程序来说该函数也是可重入的。</p>
+</li>
+<li><p>如果函数对于异步信号处理程序的重入是安全的，那么可以说函数是异步信号安全的</p>
+</li>
+<li><p><strong>重入的要求高于线程安全</strong></p>
+<p>可重入要求信号安全</p>
+<p>一般来说：</p>
+<p>如果一个函数的实现使用了全局或者静态变量，且访问未加锁，那么这个函数既不是可重入的，也不是线程安全的。</p>
+<p>如果放宽条件，这个函数仍然用到了全局或者静态变量，但是在访问这些变量时，通过加锁来保证互斥访问，那么这个函数就可以变成线程安全的函数。但它此时仍然是不可重入的，因为通常加锁是针对不同线程的访问，对同一线程可能出现问题（发生信号软中断，signal handler中恰巧也执行了该函数）。</p>
+</li>
+</ul>
+<h3 id="非线程安全函数"><a href="#非线程安全函数" class="headerlink" title="非线程安全函数"></a>非线程安全函数</h3><p><img src="https://i.loli.net/2021/10/15/7JrTCHj1DRlBpy6.png" srcset="/img/loading.gif" lazyload alt="image-20211015231532218"></p>
+<h3 id="替代的线程安全函数"><a href="#替代的线程安全函数" class="headerlink" title="替代的线程安全函数"></a>替代的线程安全函数</h3><p><img src="https://i.loli.net/2021/10/15/3b7pgVX6hin1FEW.png" srcset="/img/loading.gif" lazyload alt="image-20211015231605762"></p>
+<h2 id="12-3-线程私有数据"><a href="#12-3-线程私有数据" class="headerlink" title="12.3 线程私有数据"></a>12.3 线程私有数据</h2><ul>
+<li><p>由于线程共享地址空间，故线程无法阻止另一个线程访问其私有数据</p>
+<p>因此需要管理线程特定数据的函数（设计上封装隔离）</p>
+</li>
+<li><p>pthread_key_create / pthread_key_delete</p>
+</li>
+<li><p>让不同线程看到同一个键值 pthread_once</p>
+<p>pthread_once_t = PTHREAD_ONCE_INIT</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">destructor</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *)</span></span>;<br><span class="hljs-keyword">pthread_key_t</span> key;<br><span class="hljs-keyword">pthread_once_t</span> init_done = PTHREAD_ONCE_INIT;<br><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">thread_init</span><span class="hljs-params">(Void)</span></span><br><span class="hljs-function"></span>&#123;<br>	err = pthread_key_create(&amp;key, destructor);<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">threadfunc</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span></span><br><span class="hljs-function"></span>&#123;<br>	pthread_once(&amp;init_done, thread_init);<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>关联键和私有数据</p>
+<p>pthread_getspecific / pthread_setspecific</p>
+</li>
+</ul>
+<h2 id="12-4-线程和信号"><a href="#12-4-线程和信号" class="headerlink" title="12.4 线程和信号"></a>12.4 线程和信号</h2><ul>
+<li><p>线程都有自己的信号屏蔽字</p>
+</li>
+<li><p>线程的处理是进程中所有线程共享的</p>
+</li>
+<li><p>信号是传递给单个线程的</p>
+<ul>
+<li>信号与硬件相关，递送给引起时间的进程</li>
+<li>其他信号发送给任意一个进程</li>
+</ul>
+</li>
+<li><p>pthread_sigmask</p>
+<ul>
+<li><p>sigprocmask在多线程环境中行为未定义</p>
+</li>
+<li><p>用法类似sigprocmask</p>
+</li>
+<li><p>sigwait等待信号出现</p>
+<ul>
+<li><p>先阻塞等待的信号（在外部）</p>
+</li>
+<li><p>原子取消信号集阻塞状态</p>
+</li>
+<li><p>信号递送后返回</p>
+</li>
+<li><p>返回前恢复阻塞信号集</p>
+<p>类比条件变量和互斥量</p>
+</li>
+</ul>
+</li>
+<li><p>多个线程等待同一信号，只有一个会被唤醒</p>
+</li>
+</ul>
+</li>
+<li><p>pthread_kill</p>
+<p>给指定进程发送信号</p>
+</li>
+<li><p>线程与I/O</p>
+<ul>
+<li><p>lseek read</p>
+<p>多线程有问题</p>
+</li>
+<li><p>pread</p>
+<p>lseek read 的原子操作</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="12-5-API"><a href="#12-5-API" class="headerlink" title="12.5 API"></a>12.5 API</h2><ul>
+<li>pthread_attr_init / pthread_attr_destroy</li>
+<li>pthread_attr_getdetachstate / pthread_attr_setdetachstate</li>
+<li>pthread_key_create</li>
+<li>pthread_mutexattr_init / pthread_mutexattr_destroy</li>
+<li>pthread_mutexattr_gettype / pthread_mutexattr_settype</li>
+<li>pthread_key_create / pthread_key_delete</li>
+<li>pthread_getspecific / pthread_setspecific</li>
+<li>pthread_sigmask</li>
+<li>pthread_sigkill</li>
+</ul>
+<h1 id="13-守护进程"><a href="#13-守护进程" class="headerlink" title="13. 守护进程"></a>13. 守护进程</h1><h2 id="13-1-概念"><a href="#13-1-概念" class="headerlink" title="13.1 概念"></a>13.1 概念</h2><h3 id="守护进程的概念"><a href="#守护进程的概念" class="headerlink" title="守护进程的概念"></a>守护进程的概念</h3><ul>
+<li>内核态守护进程（内核线程）<ul>
+<li>eg： 虚拟内存换页kswapd / 脏页面冲刷 flush</li>
+</ul>
+</li>
+<li>用户态守护进程<ul>
+<li>由 init 拉起</li>
+<li>setsid 使其一般是会话首进程，同时也是进程组组长、唯一进程</li>
+</ul>
+</li>
+</ul>
+<h3 id="编写守护进程的惯例"><a href="#编写守护进程的惯例" class="headerlink" title="编写守护进程的惯例"></a>编写守护进程的惯例</h3><ol>
+<li><p>umask 设置文件模式创建屏蔽字</p>
+<p>通常 umask(0)</p>
+</li>
+<li><p>父进程 fork 并 exit</p>
+<p>为子进程 setsid 创建会话创造条件</p>
+</li>
+<li><p> setsid</p>
+</li>
+</ol>
+<p>   会话首进程 / 进程组组长 / 没有控制终端</p>
+<ol start="4">
+<li><p>当前工作目录改为根目录或者其他位置</p>
+<p>chdir(“/“)            防挂在umount</p>
+</li>
+<li><p>关闭不用的文件描述符</p>
+<p>首先 getrlimit 判定最高文件描述符的值，然后用循环全部关闭</p>
+</li>
+<li><p>打开 /dev/null 使具有文件描述符0、1、2</p>
+<p>因为守护进程并不与终端设备相关联，无从显示也无需输入</p>
+<p>fd0 = open(“/dev/null”, O_RDWR);</p>
+</li>
+<li><p>一般还需要处理 SIGHUP 信号</p>
+<p>原因：孤儿进程</p>
+</li>
+</ol>
+<h3 id="出错记录"><a href="#出错记录" class="headerlink" title="出错记录"></a>出错记录</h3><ul>
+<li><img src="https://i.loli.net/2021/10/15/U2B4Ym8CMXEQ1Lh.png" srcset="/img/loading.gif" lazyload alt="image-20211015160833072"></li>
+<li>内核例程调用log函数</li>
+<li>用户守护进程调用 syslog 函数</li>
+<li>本地或其他主机可通过 UDP 514端口传递log</li>
+<li>rsyslog</li>
+</ul>
+<h3 id="单例守护进程"><a href="#单例守护进程" class="headerlink" title="单例守护进程"></a>单例守护进程</h3><ul>
+<li><p>文件记录锁</p>
+<p>记录锁</p>
+</li>
+<li><p>惯例</p>
+<ol>
+<li><p>锁通常指定在 /var/run/%name%.pid</p>
+<p>内容一般就是pid号</p>
+</li>
+<li><p>配置文件通常在 /etc/%name%.conf</p>
+</li>
+<li><p>守护进程一般通过初始化脚本之一启动</p>
+<p>/etc/rc*    /etc/init.d/*    /etc/inittab启动自动重启</p>
+</li>
+<li><p>一般注册 SIGHUP 处理程序</p>
+<p>一方面使为了防止默认动作终止</p>
+<p>功能上设置为重新读取配置</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="13-2-API"><a href="#13-2-API" class="headerlink" title="13.2 API"></a>13.2 API</h2><ul>
+<li>openlog / syslog / closelog / setlog / mask</li>
+<li>vsyslog</li>
+</ul>
+<h1 id="14-进阶I-O"><a href="#14-进阶I-O" class="headerlink" title="14 进阶I/O"></a>14 进阶I/O</h1><h2 id="14-1-非阻塞I-O"><a href="#14-1-非阻塞I-O" class="headerlink" title="14.1 非阻塞I/O"></a>14.1 非阻塞I/O</h2><ul>
+<li><p>低速系统调用</p>
+<p>定义：会引起进程永久阻塞</p>
+<ul>
+<li>某些文件类型数据不存在，读引起永久阻塞</li>
+<li>数据不能被相同的文件类型接受，写操作会永久阻塞</li>
+<li>对加了记录锁的文件读写</li>
+<li>ioctl</li>
+<li>进程通信函数</li>
+</ul>
+</li>
+<li><p>open 先天指定 O_NONBLOCK</p>
+</li>
+<li><p>fcntl 后天设置  O_NONBLOCK</p>
+</li>
+<li><p>轮询 polling + 非阻塞I/O</p>
+<p>类似用户态的自旋锁   浪费cpu时间</p>
+</li>
+<li><p>多线程 + 阻塞I/O</p>
+<p>额外的线程开销、同步开销</p>
+</li>
+</ul>
+<h2 id="14-2-记录锁-recording-lock"><a href="#14-2-记录锁-recording-lock" class="headerlink" title="14.2 记录锁 recording lock"></a>14.2 记录锁 recording lock</h2><ul>
+<li><p>确保进程单独写文件</p>
+<p>进程读或写文件的某个部分时，使用记录锁组织其他进程修改同一文件区</p>
+<p>byte range locking</p>
+</li>
+<li><p>fcntl 记录锁</p>
+<ul>
+<li><p>struct flock</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flock</span>&#123;</span><br>	<span class="hljs-keyword">short</span> l_type;<br>	<span class="hljs-keyword">short</span> l_whence;<br>	<span class="hljs-keyword">off_t</span> l_start;<br>	<span class="hljs-keyword">off_t</span> l_len;<br>	<span class="hljs-keyword">pid_t</span> l_pid;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>l_type :  F_GETLK / F_SETLK / F_SETLKW</p>
+</li>
+<li><p>F_GETLK 检测上锁后上锁不是原子操作</p>
+</li>
+<li><p>F_SETLKW 检测到死锁后杀死另一个进程获得资源</p>
+</li>
+</ul>
+</li>
+<li><p>锁的隐含继承与释放</p>
+<ol>
+<li><p>进程终止时，建立的所有锁全部释放</p>
+</li>
+<li><p>关联的fd何时关闭，锁都会释放</p>
+</li>
+<li><p>fork 子进程只能继承文件描述符，不能继承它的锁</p>
+</li>
+</ol>
+</li>
+<li><p>文件尾端加锁</p>
+</li>
+<li><p>建议性锁和强制性锁</p>
+</li>
+</ul>
+<h2 id="14-3-异步I-O"><a href="#14-3-异步I-O" class="headerlink" title="14.3 异步I/O"></a>14.3 异步I/O</h2><p>不建议用</p>
+<h2 id="14-4-I-O多路转接-multiplexing"><a href="#14-4-I-O多路转接-multiplexing" class="headerlink" title="14.4 I/O多路转接(multiplexing)"></a>14.4 I/O多路转接(multiplexing)</h2><h3 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h3><ul>
+<li><p>阻塞模式下在多个fd上写，一个block会导致后面的pending</p>
+<ul>
+<li><p>polling + 无阻塞可以解决</p>
+</li>
+<li><p>异步I/O 用信号通知</p>
+<p>缺点在于不知道哪个fd ready（不够映射）</p>
+</li>
+<li><p>I/O多路复用</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><ul>
+<li>select / pselect</li>
+<li>pselect 支持 timespec 结构，更精确的时间</li>
+<li>最多支持fd 有上限</li>
+</ul>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><ul>
+<li>通过数组表明关心的条件</li>
+<li>解决了fd数量的瓶颈</li>
+</ul>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><ul>
+<li>linux I/O多路转接的最优机制</li>
+<li>性能高<ul>
+<li>规避了所有fd的用户态 copy 到内核态的开销<ul>
+<li>fd常驻内核</li>
+<li>内核以红黑树组织</li>
+</ul>
+</li>
+<li>内核态只回传ready 部分的fd</li>
+<li>边沿触发</li>
+</ul>
+</li>
+</ul>
+<h2 id="14-5-其他"><a href="#14-5-其他" class="headerlink" title="14.5 其他"></a>14.5 其他</h2><h3 id="readv-writev"><a href="#readv-writev" class="headerlink" title="readv / writev"></a>readv / writev</h3><ul>
+<li><p>散布读(scatter read) / 聚集写(gather write)</p>
+<ul>
+<li><p>iovec 结构数组</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">iovec</span>&#123;</span><br>	<span class="hljs-keyword">void</span> *iov_base;<br>	<span class="hljs-keyword">size_t</span> iov_len<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>降低系统调用的次数，获取性能</p>
+</li>
+</ul>
+<h3 id="readn-writen"><a href="#readn-writen" class="headerlink" title="readn / writen"></a>readn / writen</h3><ul>
+<li><p>apue 对 read / write 的一些容错封装</p>
+</li>
+<li><p>原因： 管道、FIFO、网络、终端</p>
+<p>可能读的字节数小于指定数量</p>
+<p>写可能因为内核缓冲区满而失效</p>
+</li>
+</ul>
+<h3 id="mmap-munmap"><a href="#mmap-munmap" class="headerlink" title="mmap / munmap"></a>mmap / munmap</h3><ul>
+<li><p>存储映射I/O</p>
+<p>磁盘文件映射到内存空间</p>
+<p>直接读写内存就是修改磁盘文件</p>
+</li>
+<li><p>mprotect</p>
+<p>修改映射区权限</p>
+</li>
+<li><p>msync</p>
+<p>立刻同步刷新</p>
+</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/17/linux%E5%91%BD%E4%BB%A4%E8%A1%8C/">
+                        <span class="hidden-mobile">Linux Cammand Line 阅读笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
