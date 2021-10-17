@@ -13,14 +13,14 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="this is my blog to share my learning experience">
+  <meta name="description" content="this is my blog">
   <meta name="author" content="wuyifff">
   <meta name="keywords" content="">
   <meta name="description" content="0.tips输入输出问题 在linux系统下使用printf发现有时没有立即输出，有时又能立即输出 原因是printf使用行缓冲，没有刷新缓冲区，故没有输出。 缓冲区刷新的条件：1.进程结束。2.遇到\n。3.缓冲区满。4.手动刷新缓冲区fflush(stdout)。   一些有用的函数&lt;stdlib.h&gt; atoi(str) 用法：将字符串里的数字字符转化为整形数。返回整形值。 注意">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UNIX环境高级编程 阅读笔记">
 <meta property="og:url" content="https://wuyifff.github.io/2021/10/17/apue/index.html">
-<meta property="og:site_name" content="w1fly&#39;s blog">
+<meta property="og:site_name" content="wuyifff&#39;s blog">
 <meta property="og:description" content="0.tips输入输出问题 在linux系统下使用printf发现有时没有立即输出，有时又能立即输出 原因是printf使用行缓冲，没有刷新缓冲区，故没有输出。 缓冲区刷新的条件：1.进程结束。2.遇到\n。3.缓冲区满。4.手动刷新缓冲区fflush(stdout)。   一些有用的函数&lt;stdlib.h&gt; atoi(str) 用法：将字符串里的数字字符转化为整形数。返回整形值。 注意">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png">
@@ -47,7 +47,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png">
   
-  <title>UNIX环境高级编程 阅读笔记 - w1fly&#39;s blog</title>
+  <title>UNIX环境高级编程 阅读笔记 - wuyifff&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -88,7 +88,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="w1fly's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="wuyifff's blog" type="application/atom+xml">
 </head>
 
 
@@ -127,30 +127,6 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
@@ -165,7 +141,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                关于
+                联系我
               </a>
             </li>
           
