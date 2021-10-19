@@ -18,17 +18,17 @@
   <meta name="keywords" content="">
   <meta name="description" content="C++ primer chapter 7类类的基本思想是数据抽象（data abstraction）和封装（encapsulation）。数据抽象是一种依赖于接口（interface）和实现（implementation）分离的编程及设计技术。类的接口包括用户所能执行的操作；类的实现包括类的数据成员、负责接口实现的函数体以及其他私有函数。 定义抽象数据类型使用class或是struct关键字可以定">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于">
+<meta property="og:title" content="C++ primer 读书笔记 chapter 7 类">
 <meta property="og:url" content="https://wuyifff.github.io/2021/10/19/7.%E7%B1%BB/index.html">
 <meta property="og:site_name" content="wuyifff&#39;s blog">
 <meta property="og:description" content="C++ primer chapter 7类类的基本思想是数据抽象（data abstraction）和封装（encapsulation）。数据抽象是一种依赖于接口（interface）和实现（implementation）分离的编程及设计技术。类的接口包括用户所能执行的操作；类的实现包括类的数据成员、负责接口实现的函数体以及其他私有函数。 定义抽象数据类型使用class或是struct关键字可以定">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-10-19T11:02:00.000Z">
-<meta property="article:modified_time" content="2021-10-19T11:03:36.350Z">
+<meta property="article:modified_time" content="2021-10-19T11:06:20.054Z">
 <meta property="article:author" content="wuyifff">
 <meta name="twitter:card" content="summary_large_image">
   
-  <title>关于 - wuyifff&#39;s blog</title>
+  <title>C++ primer 读书笔记 chapter 7 类 - wuyifff&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -74,7 +74,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -151,7 +151,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="关于">
+            <span class="h2" id="subtitle" title="C++ primer 读书笔记 chapter 7 类">
               
             </span>
 
@@ -202,57 +202,18 @@
     
       
 
-<div class="text-center">
-  <div class="about-info">
-    <div class="about-name">Fluid</div>
-    <div class="about-intro">An elegant theme for Hexo</div>
-    <div class="about-icons">
-      
-        
-        
-        
-        <a href=https://github.com class="
-           hint--bottom hint--rounded"
-           aria-label=GitHub
-           target="_blank"
-        >
-          <i class="iconfont icon-github-fill" aria-hidden="true"></i>
-          
-        </a>
-      
-        
-        
-        
-        <a href=https://douban.com class="
-           hint--bottom hint--rounded"
-           aria-label=豆瓣
-           target="_blank"
-        >
-          <i class="iconfont icon-douban-fill" aria-hidden="true"></i>
-          
-        </a>
-      
-        
-        
-        
-        <a  class="qr-trigger
-           "
-           
-           target="_self"
-        >
-          <i class="iconfont icon-wechat-fill" aria-hidden="true"></i>
-          
-            <img class="qr-img" src="/img/favicon.png" srcset="/img/loading.gif" lazyload alt="qrcode" />
-          
-        </a>
-      
-    </div>
-  </div>
-</div>
-
-<article class="about-content page-content mt-5">
-  <div class="markdown-body">
-    <h1 id="C-primer-chapter-7"><a href="#C-primer-chapter-7" class="headerlink" title="C++ primer chapter 7"></a>C++ primer chapter 7</h1><h1 id="类"><a href="#类" class="headerlink" title="类"></a>类</h1><p>类的基本思想是<strong>数据抽象（data abstraction）</strong>和<strong>封装（encapsulation）</strong>。数据抽象是一种依赖于<strong>接口（interface）</strong>和<strong>实现（implementation）</strong>分离的编程及设计技术。<strong>类的接口</strong>包括用户所能执行的操作；<strong>类的实现</strong>包括类的数据成员、负责接口实现的函数体以及其他私有函数。</p>
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++ primer 读书笔记 chapter 7 类</h1>
+            
+            <div class="markdown-body">
+              <h1 id="C-primer-chapter-7"><a href="#C-primer-chapter-7" class="headerlink" title="C++ primer chapter 7"></a>C++ primer chapter 7</h1><h1 id="类"><a href="#类" class="headerlink" title="类"></a>类</h1><p>类的基本思想是<strong>数据抽象（data abstraction）</strong>和<strong>封装（encapsulation）</strong>。数据抽象是一种依赖于<strong>接口（interface）</strong>和<strong>实现（implementation）</strong>分离的编程及设计技术。<strong>类的接口</strong>包括用户所能执行的操作；<strong>类的实现</strong>包括类的数据成员、负责接口实现的函数体以及其他私有函数。</p>
 <h2 id="定义抽象数据类型"><a href="#定义抽象数据类型" class="headerlink" title="定义抽象数据类型"></a>定义抽象数据类型</h2><p>使用class或是struct关键字可以定义类类型，struct是为了兼容旧式C风格结构体，对于定义类类型来说，struct和class的<strong>唯一区别在于默认访问权限不同</strong>。</p>
 <h3 id="this指针"><a href="#this指针" class="headerlink" title="this指针"></a>this指针</h3><p>成员函数通过一个名为this的<strong>隐式参数</strong>来访问调用它的对象。this是一个<strong>常量指针</strong>，无法改变this中保存的地址。</p>
 <h3 id="const成员函数"><a href="#const成员函数" class="headerlink" title="const成员函数"></a>const成员函数</h3><p>isbn函数的参数列表后跟随了一个const关键字，这里的const是用来<strong>修改隐式this指针的类型</strong>。</p>
@@ -425,20 +386,59 @@
 </blockquote>
 <p>如果一定要<strong>在类内部定义</strong>，则要求<strong>必须是字面值常量类型</strong>的<code>constexpr</code></p>
 
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/17/apue/">
+                        <span class="hidden-mobile">UNIX环境高级编程 阅读笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
   </div>
+</div>
 
-  
-    <!-- Comments -->
-    <article class="comments" id="comments" lazyload>
-      
-      
-        
-      
-      
+<!-- Custom -->
 
-    </article>
-  
-</article>
 
     
 
