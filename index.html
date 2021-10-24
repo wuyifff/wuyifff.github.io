@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://img2.baidu.com/it/u=1666317074,1613202087&amp;fm=26&amp;fmt=auto">
+  <link rel="icon" href="https://img2.baidu.com/it/u=1666317074,1613202087&amp;fm=26&amp;fmt=auto">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -48,7 +48,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wuyifff.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"wuyifff.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":" ","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -57,11 +57,11 @@
 
 
 <body>
-  <header style="height: 100vh;">
+  <header style="height: 60vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
+      <strong>wuyifff&#39;s blog</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -91,6 +91,30 @@
           
           
             <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
@@ -105,7 +129,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                联系我
+                关于
               </a>
             </li>
           
@@ -142,10 +166,6 @@
           </div>
 
           
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          
         </div>
       </div>
     </div>
@@ -155,7 +175,7 @@
     
       <div class="container nopadding-x-md">
         <div class="py-5" id="board"
-          style=margin-top:0>
+          >
           
           <div class="container">
             <div class="row">
@@ -180,13 +200,7 @@
           
             
           
-          C++ Primer  chapter 15面向对象程序设计OOP概述OOP三大核心思想：抽象、继承和多态（动态绑定）。
-
-数据抽象将类的接口与实现分离
-继承可以定义相似的类型并对其相似关系建模
-多态则在一定程度上忽略相似类型的区别，实现统一方式来使用一组对象
-
-对继承来说，层次关系的根部类叫基类，其他类可以直接或间接从基类继承而来，它们叫派生类。基类负责定义在层次关系中所有类共同拥有的成员，派生
+          OOP三大核心思想：抽象、继承和多态（动态绑定）
         </a>
       </p>
 
@@ -222,9 +236,7 @@
           
             
           
-          C++ primer chapter 12动态内存动态内存与智能指针C++中的动态内存管理通过一对运算符完成：new在动态内存中为对象分配空间并返回指向该对象的指针，可以选择对对象进行初始化；delete接受一个动态对象的指针，销毁该对象并释放与之关联的内存。
-如果忘记释放内存，就会产生内存泄露。而如果在尚有指针引用内存的情况下释放内存，可能产生野指针的使用。
-为了安全，标准库提供了两种智能指针(
+          智能指针和普通指针的区别在于智能指针实际上是对普通指针加了一层封装机制，这样的一层封装机制的目的是为了使得智能指针可以方便的管理一个对象的生命期。
         </a>
       </p>
 
@@ -260,8 +272,7 @@
           
             
           
-          C++ primer chapter 7类类的基本思想是数据抽象（data abstraction）和封装（encapsulation）。数据抽象是一种依赖于接口（interface）和实现（implementation）分离的编程及设计技术。类的接口包括用户所能执行的操作；类的实现包括类的数据成员、负责接口实现的函数体以及其他私有函数。
-定义抽象数据类型使用class或是struct关键字可以定
+          类的基本思想是数据抽象（data abstraction）和封装（encapsulation）。数据抽象是一种依赖于接口（interface）和实现（implementation）分离的编程及设计技术。
         </a>
       </p>
 
@@ -286,27 +297,18 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/10/17/apue/" target="_self">
-          UNIX环境高级编程 阅读笔记
+        <a href="/2021/09/05/apue/" target="_self">
+          APUE
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/10/17/apue/" target="_self">
+        <a href="/2021/09/05/apue/" target="_self">
           
           
             
           
-          0.tips输入输出问题
-在linux系统下使用printf发现有时没有立即输出，有时又能立即输出
-原因是printf使用行缓冲，没有刷新缓冲区，故没有输出。
-缓冲区刷新的条件：1.进程结束。2.遇到\n。3.缓冲区满。4.手动刷新缓冲区fflush(stdout)。
-
-
-一些有用的函数&lt;stdlib.h&gt;
-atoi(str)
-用法：将字符串里的数字字符转化为整形数。返回整形值。
-注意
+          UNIX环境高级编程 1-14章内容读书笔记
         </a>
       </p>
 
@@ -314,8 +316,44 @@ atoi(str)
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2021-10-17 15:22" pubdate>
-              2021-10-17
+            <time datetime="2021-09-05 17:38" pubdate>
+              2021-09-05
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/05/24/linux%E5%91%BD%E4%BB%A4%E8%A1%8C/" target="_self">
+          Linux Cammand Line 阅读笔记
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/05/24/linux%E5%91%BD%E4%BB%A4%E8%A1%8C/" target="_self">
+          
+          
+            
+          
+          Linux 的基本操作以及原理介绍    中文翻译链接 https://github.com/billie66/TLCL
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-05-24 15:38" pubdate>
+              2021-05-24
             </time>
           </div>
         
@@ -406,10 +444,6 @@ atoi(str)
   <script  src="/js/local-search.js" ></script>
 
 
-
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
 
 
 

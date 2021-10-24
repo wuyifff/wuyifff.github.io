@@ -7,21 +7,21 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://img2.baidu.com/it/u=1666317074,1613202087&amp;fm=26&amp;fmt=auto">
+  <link rel="icon" href="https://img2.baidu.com/it/u=1666317074,1613202087&amp;fm=26&amp;fmt=auto">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="this is my blog">
+  <meta name="description" content="UNIX环境高级编程 1-14章内容读书笔记">
   <meta name="author" content="wuyifff">
   <meta name="keywords" content="">
-  <meta name="description" content="0.tips输入输出问题 在linux系统下使用printf发现有时没有立即输出，有时又能立即输出 原因是printf使用行缓冲，没有刷新缓冲区，故没有输出。 缓冲区刷新的条件：1.进程结束。2.遇到\n。3.缓冲区满。4.手动刷新缓冲区fflush(stdout)。   一些有用的函数&lt;stdlib.h&gt; atoi(str) 用法：将字符串里的数字字符转化为整形数。返回整形值。 注意">
+  <meta name="description" content="UNIX环境高级编程 1-14章内容读书笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="UNIX环境高级编程 阅读笔记">
-<meta property="og:url" content="https://wuyifff.github.io/2021/10/17/apue/index.html">
+<meta property="og:title" content="APUE">
+<meta property="og:url" content="https://wuyifff.github.io/2021/09/05/apue/index.html">
 <meta property="og:site_name" content="wuyifff&#39;s blog">
-<meta property="og:description" content="0.tips输入输出问题 在linux系统下使用printf发现有时没有立即输出，有时又能立即输出 原因是printf使用行缓冲，没有刷新缓冲区，故没有输出。 缓冲区刷新的条件：1.进程结束。2.遇到\n。3.缓冲区满。4.手动刷新缓冲区fflush(stdout)。   一些有用的函数&lt;stdlib.h&gt; atoi(str) 用法：将字符串里的数字字符转化为整形数。返回整形值。 注意">
+<meta property="og:description" content="UNIX环境高级编程 1-14章内容读书笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png">
 <meta property="og:image" content="https://i.loli.net/2021/10/08/Uto3clnhVJEy12D.png">
@@ -41,13 +41,13 @@
 <meta property="og:image" content="https://i.loli.net/2021/10/15/7JrTCHj1DRlBpy6.png">
 <meta property="og:image" content="https://i.loli.net/2021/10/15/3b7pgVX6hin1FEW.png">
 <meta property="og:image" content="https://i.loli.net/2021/10/15/U2B4Ym8CMXEQ1Lh.png">
-<meta property="article:published_time" content="2021-10-17T07:22:38.472Z">
-<meta property="article:modified_time" content="2021-10-17T07:38:39.541Z">
+<meta property="article:published_time" content="2021-09-05T09:38:00.000Z">
+<meta property="article:modified_time" content="2021-10-24T09:36:26.840Z">
 <meta property="article:author" content="wuyifff">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png">
   
-  <title>UNIX环境高级编程 阅读笔记 - wuyifff&#39;s blog</title>
+  <title>APUE - wuyifff&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -84,7 +84,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wuyifff.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"wuyifff.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":" ","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -97,7 +97,7 @@
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
+      <strong>wuyifff&#39;s blog</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -127,6 +127,30 @@
           
           
             <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
@@ -141,7 +165,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                联系我
+                关于
               </a>
             </li>
           
@@ -165,12 +189,12 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/default.png') no-repeat center center;
+         style="background: url('https://img0.baidu.com/it/u=336294190,1675821935&fm=26&fmt=auto') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="UNIX环境高级编程 阅读笔记">
+            <span class="h2" id="subtitle" title="APUE">
               
             </span>
 
@@ -180,8 +204,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-10-17 15:22" pubdate>
-        2021年10月17日 下午
+      <time datetime="2021-09-05 17:38" pubdate>
+        2021年9月5日 下午
       </time>
     </span>
   
@@ -229,7 +253,13 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">UNIX环境高级编程 阅读笔记</h1>
+            <h1 style="display: none">APUE</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年10月24日 下午
+                
+              </p>
             
             <div class="markdown-body">
               <h1 id="0-tips"><a href="#0-tips" class="headerlink" title="0.tips"></a>0.tips</h1><h2 id="输入输出问题"><a href="#输入输出问题" class="headerlink" title="输入输出问题"></a>输入输出问题</h2><ul>
@@ -269,7 +299,7 @@
 <li><p>系统调用 内核为应用程序提供的接口   用户态-&gt;内核态</p>
 </li>
 <li><p>体系结构</p>
-<p><img src="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png" srcset="/img/loading.gif" lazyload alt="image-20211007104949635"></p>
+<p><img src="https://i.loli.net/2021/10/07/I9bfymOhG5PSKnX.png" alt="image-20211007104949635"></p>
 <p>shell    sh/bash/csh/ksh </p>
 <p>库函数    库函数到系统调用</p>
 </li>
@@ -380,9 +410,9 @@
 </li>
 <li><p>OPEN_MAX（文件打开的极限值）</p>
 </li>
-<li><p><img src="https://i.loli.net/2021/10/08/Uto3clnhVJEy12D.png" srcset="/img/loading.gif" lazyload alt="image-20211008102820346"></p>
+<li><p><img src="https://i.loli.net/2021/10/08/Uto3clnhVJEy12D.png" alt="image-20211008102820346"></p>
 </li>
-<li><p><img src="https://i.loli.net/2021/10/08/gsyILjapZ29F7t6.png" srcset="/img/loading.gif" lazyload alt="image-20211008103035519"></p>
+<li><p><img src="https://i.loli.net/2021/10/08/gsyILjapZ29F7t6.png" alt="image-20211008103035519"></p>
 <ul>
 <li><strong>进程各自维护自己的文件描述符表，文件描述符表记录文件描述符标志，和一个指向文件表项的指针</strong></li>
 <li><strong>文件表项由内核为每一个打开的文件维护，包括文件状态标志、当前文件偏移、以及指向v结点的指针</strong><ul>
@@ -445,7 +475,7 @@
 </ul>
 <h3 id="pread-pwrite"><a href="#pread-pwrite" class="headerlink" title="pread/pwrite"></a>pread/pwrite</h3><p>原子lseek + read/write</p>
 <h3 id="dup-dup2"><a href="#dup-dup2" class="headerlink" title="dup/dup2"></a>dup/dup2</h3><ul>
-<li><img src="https://i.loli.net/2021/10/08/I9dk2Rxzu4bLwXe.png" srcset="/img/loading.gif" lazyload alt="image-20211008212224736"></li>
+<li><img src="https://i.loli.net/2021/10/08/I9dk2Rxzu4bLwXe.png" alt="image-20211008212224736"></li>
 <li>新描述符的FD_CLOEXEC总是被清除 （即fd flag）</li>
 <li>dup(fd) = fcntl(fd, F_DUPFD, 0);</li>
 <li>dup2(fd) = close(fd2); fcntl(fd, F_DUPFD, fd2); //且为<strong>原子操作</strong></li>
@@ -581,7 +611,7 @@
 <li><code>S_IWOTH</code>：用户写</li>
 <li><code>S_IXOTH</code>：用户执行</li>
 </ul>
-<p><img src="https://i.loli.net/2021/10/10/2q7eFnO8j6xHNyY.png" srcset="/img/loading.gif" lazyload alt="image-20211010161123024"></p>
+<p><img src="https://i.loli.net/2021/10/10/2q7eFnO8j6xHNyY.png" alt="image-20211010161123024"></p>
 </li>
 <li><p>鉴权流程</p>
 </li>
@@ -713,10 +743,10 @@
 <p>行缓冲：</p>
 <ol>
 <li><p>输入输出遇到换行符时执行I/O操作</p>
-<pre><code>            2. 由于每行缓冲区固定，缓冲区满没有遇到换行符也要执行I/O
+<div class="hljs code-wrapper"><pre><code>            2. 由于每行缓冲区固定，缓冲区满没有遇到换行符也要执行I/O
             3.  任何时候只要通过标准lO库，要求从一个不带缓冲的流或者一个行缓冲的流(从内核请求数据的时机）得到输入数据，那么就会冲洗所有行缓冲输出流。(即要缓冲输入，先冲洗输出缓冲)
             4. 指向终端的流通常使用行缓冲
-</code></pre>
+</code></pre></div>
 </li>
 </ol>
 <p>不带缓冲：不进行缓冲</p>
@@ -864,7 +894,7 @@
 </li>
 <li><p>这两者区别： 不同标准定义 、是否做了清理工作</p>
 </li>
-<li><p><img src="https://i.loli.net/2021/10/12/6ILPQsK8ROXj5CF.png" srcset="/img/loading.gif" lazyload alt="image-20211012235649755"></p>
+<li><p><img src="https://i.loli.net/2021/10/12/6ILPQsK8ROXj5CF.png" alt="image-20211012235649755"></p>
 </li>
 </ul>
 <h3 id="2-终止处理程序"><a href="#2-终止处理程序" class="headerlink" title="2 终止处理程序"></a>2 终止处理程序</h3><ul>
@@ -877,14 +907,14 @@
 </li>
 <li><p>envp   环境表</p>
 <p>全局变量   environ</p>
-<p><img src="https://i.loli.net/2021/10/12/qnl1Hc9s4xKOfUY.png" srcset="/img/loading.gif" lazyload alt="image-20211012235941033"></p>
+<p><img src="https://i.loli.net/2021/10/12/qnl1Hc9s4xKOfUY.png" alt="image-20211012235941033"></p>
 <ul>
 <li>函数 getenv / putenv</li>
 <li>一般调用函数获取环境，而非读取environ</li>
 </ul>
 </li>
 <li><p>进程地址空间</p>
-<p><img src="https://i.loli.net/2021/10/13/9X1HA2xE8dQ7TrI.png" srcset="/img/loading.gif" lazyload alt="image-20211013000146968"></p>
+<p><img src="https://i.loli.net/2021/10/13/9X1HA2xE8dQ7TrI.png" alt="image-20211013000146968"></p>
 <p>.text / .data / .bss / stack / heap / others (so , debug , systab )</p>
 </li>
 </ul>
@@ -934,7 +964,7 @@
 <li><p>代码段共享 （只读）</p>
 </li>
 <li><p>拷贝文件描述符表</p>
-<p><img src="https://i.loli.net/2021/10/13/NQ7HU8TExiwOo3J.png" srcset="/img/loading.gif" lazyload alt="image-20211013001243684"></p>
+<p><img src="https://i.loli.net/2021/10/13/NQ7HU8TExiwOo3J.png" alt="image-20211013001243684"></p>
 </li>
 <li><p>继承父进程相关属性</p>
 <p>实际用户ID、实际组ID、有效用户ID、有效组ID 附属组ID 进程组ID 会话ID 控制终端 设置用户ID标识和设置组ID标识 当前工作目录 根目录 文件模式创建屏蔽字 信号屏蔽和安排 对任一打开文件描述符的执行时关闭(close-on-exec)标识 环境变量 连接的共享存储段 存储映像 资源限制</p>
@@ -1035,7 +1065,7 @@
 <li>getpriority/setpriority</li>
 <li>times</li>
 </ul>
-<h1 id="9-进程关系"><a href="#9-进程关系" class="headerlink" title="9. 进程关系"></a>9. 进程关系</h1><h2 id="9-1-概念"><a href="#9-1-概念" class="headerlink" title="9.1 概念"></a>9.1 概念</h2><h3 id="终端"><a href="#终端" class="headerlink" title="终端"></a>终端</h3><p><img src="https://i.loli.net/2021/10/15/pDU7nBhWYsqKtjm.png" srcset="/img/loading.gif" lazyload alt="image-20211015155106020"></p>
+<h1 id="9-进程关系"><a href="#9-进程关系" class="headerlink" title="9. 进程关系"></a>9. 进程关系</h1><h2 id="9-1-概念"><a href="#9-1-概念" class="headerlink" title="9.1 概念"></a>9.1 概念</h2><h3 id="终端"><a href="#终端" class="headerlink" title="终端"></a>终端</h3><p><img src="https://i.loli.net/2021/10/15/pDU7nBhWYsqKtjm.png" alt="image-20211015155106020"></p>
 <ul>
 <li><p>tty1-6</p>
 <p>CTRL ALT F1-6</p>
@@ -1079,7 +1109,7 @@
 </li>
 <li><p>n个后台进程组</p>
 </li>
-<li><p><img src="https://i.loli.net/2021/10/15/qJIVv3AE1sRPOQm.png" srcset="/img/loading.gif" lazyload alt="image-20211015154131834"></p>
+<li><p><img src="https://i.loli.net/2021/10/15/qJIVv3AE1sRPOQm.png" alt="image-20211015154131834"></p>
 </li>
 </ul>
 </li>
@@ -1099,7 +1129,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="作业控制"><a href="#作业控制" class="headerlink" title="作业控制"></a>作业控制</h3><p><img src="https://i.loli.net/2021/10/15/lSc1txX8ZjoD2sv.png" srcset="/img/loading.gif" lazyload alt="image-20211015155022811"></p>
+<h3 id="作业控制"><a href="#作业控制" class="headerlink" title="作业控制"></a>作业控制</h3><p><img src="https://i.loli.net/2021/10/15/lSc1txX8ZjoD2sv.png" alt="image-20211015155022811"></p>
 <h2 id="9-2-API"><a href="#9-2-API" class="headerlink" title="9.2 API"></a>9.2 API</h2><ul>
 <li>getpgrp / getpgid / sepgid</li>
 <li>setsid / getsid</li>
@@ -1135,7 +1165,7 @@
 </ul>
 </li>
 <li><p>执行默认动作</p>
-<p><img src="https://i.loli.net/2021/10/13/oRPtp3KE8DM6zXm.png" srcset="/img/loading.gif" lazyload alt="image-20211013234629726"></p>
+<p><img src="https://i.loli.net/2021/10/13/oRPtp3KE8DM6zXm.png" alt="image-20211013234629726"></p>
 </li>
 <li><p>函数 signal / sigaction</p>
 </li>
@@ -1155,7 +1185,7 @@
 </ul>
 <h3 id="可重入函数"><a href="#可重入函数" class="headerlink" title="可重入函数"></a>可重入函数</h3><ul>
 <li><p>异步信号安全</p>
-<p><img src="https://i.loli.net/2021/10/13/mTB6qjaRNg81KUw.png" srcset="/img/loading.gif" lazyload alt="image-20211013235025005"></p>
+<p><img src="https://i.loli.net/2021/10/13/mTB6qjaRNg81KUw.png" alt="image-20211013235025005"></p>
 </li>
 <li><p>不可重入的情况</p>
 <p>static静态变量</p>
@@ -1511,7 +1541,7 @@
 </tbody></table>
 </li>
 <li><p>递归锁的使用场景</p>
-<p><img src="https://i.loli.net/2021/10/15/adhHkbEo9LBI1gC.png" srcset="/img/loading.gif" lazyload alt="image-20211015230742334"></p>
+<p><img src="https://i.loli.net/2021/10/15/adhHkbEo9LBI1gC.png" alt="image-20211015230742334"></p>
 </li>
 </ul>
 </li>
@@ -1542,8 +1572,8 @@
 <p>如果放宽条件，这个函数仍然用到了全局或者静态变量，但是在访问这些变量时，通过加锁来保证互斥访问，那么这个函数就可以变成线程安全的函数。但它此时仍然是不可重入的，因为通常加锁是针对不同线程的访问，对同一线程可能出现问题（发生信号软中断，signal handler中恰巧也执行了该函数）。</p>
 </li>
 </ul>
-<h3 id="非线程安全函数"><a href="#非线程安全函数" class="headerlink" title="非线程安全函数"></a>非线程安全函数</h3><p><img src="https://i.loli.net/2021/10/15/7JrTCHj1DRlBpy6.png" srcset="/img/loading.gif" lazyload alt="image-20211015231532218"></p>
-<h3 id="替代的线程安全函数"><a href="#替代的线程安全函数" class="headerlink" title="替代的线程安全函数"></a>替代的线程安全函数</h3><p><img src="https://i.loli.net/2021/10/15/3b7pgVX6hin1FEW.png" srcset="/img/loading.gif" lazyload alt="image-20211015231605762"></p>
+<h3 id="非线程安全函数"><a href="#非线程安全函数" class="headerlink" title="非线程安全函数"></a>非线程安全函数</h3><p><img src="https://i.loli.net/2021/10/15/7JrTCHj1DRlBpy6.png" alt="image-20211015231532218"></p>
+<h3 id="替代的线程安全函数"><a href="#替代的线程安全函数" class="headerlink" title="替代的线程安全函数"></a>替代的线程安全函数</h3><p><img src="https://i.loli.net/2021/10/15/3b7pgVX6hin1FEW.png" alt="image-20211015231605762"></p>
 <h2 id="12-3-线程私有数据"><a href="#12-3-线程私有数据" class="headerlink" title="12.3 线程私有数据"></a>12.3 线程私有数据</h2><ul>
 <li><p>由于线程共享地址空间，故线程无法阻止另一个线程访问其私有数据</p>
 <p>因此需要管理线程特定数据的函数（设计上封装隔离）</p>
@@ -1552,7 +1582,7 @@
 </li>
 <li><p>让不同线程看到同一个键值 pthread_once</p>
 <p>pthread_once_t = PTHREAD_ONCE_INIT</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">destructor</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *)</span></span>;<br><span class="hljs-keyword">pthread_key_t</span> key;<br><span class="hljs-keyword">pthread_once_t</span> init_done = PTHREAD_ONCE_INIT;<br><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">thread_init</span><span class="hljs-params">(Void)</span></span><br><span class="hljs-function"></span>&#123;<br>	err = pthread_key_create(&amp;key, destructor);<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">threadfunc</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span></span><br><span class="hljs-function"></span>&#123;<br>	pthread_once(&amp;init_done, thread_init);<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">destructor</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *)</span></span>;<br><span class="hljs-keyword">pthread_key_t</span> key;<br><span class="hljs-keyword">pthread_once_t</span> init_done = PTHREAD_ONCE_INIT;<br><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">thread_init</span><span class="hljs-params">(Void)</span></span><br><span class="hljs-function"></span>&#123;<br>	err = pthread_key_create(&amp;key, destructor);<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">threadfunc</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span></span><br><span class="hljs-function"></span>&#123;<br>	pthread_once(&amp;init_done, thread_init);<br>    ...<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
 <li><p>关联键和私有数据</p>
 <p>pthread_getspecific / pthread_setspecific</p>
 </li>
@@ -1654,7 +1684,7 @@
 </li>
 </ol>
 <h3 id="出错记录"><a href="#出错记录" class="headerlink" title="出错记录"></a>出错记录</h3><ul>
-<li><img src="https://i.loli.net/2021/10/15/U2B4Ym8CMXEQ1Lh.png" srcset="/img/loading.gif" lazyload alt="image-20211015160833072"></li>
+<li><img src="https://i.loli.net/2021/10/15/U2B4Ym8CMXEQ1Lh.png" alt="image-20211015160833072"></li>
 <li>内核例程调用log函数</li>
 <li>用户守护进程调用 syslog 函数</li>
 <li>本地或其他主机可通过 UDP 514端口传递log</li>
@@ -1715,7 +1745,7 @@
 <li><p>fcntl 记录锁</p>
 <ul>
 <li><p>struct flock</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flock</span>&#123;</span><br>	<span class="hljs-keyword">short</span> l_type;<br>	<span class="hljs-keyword">short</span> l_whence;<br>	<span class="hljs-keyword">off_t</span> l_start;<br>	<span class="hljs-keyword">off_t</span> l_len;<br>	<span class="hljs-keyword">pid_t</span> l_pid;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flock</span>&#123;</span><br>	<span class="hljs-keyword">short</span> l_type;<br>	<span class="hljs-keyword">short</span> l_whence;<br>	<span class="hljs-keyword">off_t</span> l_start;<br>	<span class="hljs-keyword">off_t</span> l_len;<br>	<span class="hljs-keyword">pid_t</span> l_pid;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
 <li><p>l_type :  F_GETLK / F_SETLK / F_SETLKW</p>
 </li>
 <li><p>F_GETLK 检测上锁后上锁不是原子操作</p>
@@ -1779,7 +1809,7 @@
 <li><p>散布读(scatter read) / 聚集写(gather write)</p>
 <ul>
 <li><p>iovec 结构数组</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">iovec</span>&#123;</span><br>	<span class="hljs-keyword">void</span> *iov_base;<br>	<span class="hljs-keyword">size_t</span> iov_len<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">iovec</span>&#123;</span><br>	<span class="hljs-keyword">void</span> *iov_base;<br>	<span class="hljs-keyword">size_t</span> iov_len<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>降低系统调用的次数，获取性能</p>
@@ -1834,6 +1864,12 @@
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2021/05/24/linux%E5%91%BD%E4%BB%A4%E8%A1%8C/">
+                        <span class="hidden-mobile">Linux Cammand Line 阅读笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
@@ -1933,10 +1969,6 @@
 
 
 
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
-
 
 
   
@@ -1975,6 +2007,48 @@
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
 
 
 
