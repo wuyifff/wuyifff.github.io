@@ -19,13 +19,13 @@
   <meta name="description" content="OOP三大核心思想：抽象、继承和多态（动态绑定）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++ primer 读书笔记 chapter 15 面向对象程序设计">
-<meta property="og:url" content="https://wuyifff.github.io/2021/10/24/15.%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:url" content="https://wuyifff.github.io/2021/10/24/c++/15.%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/index.html">
 <meta property="og:site_name" content="wuyifff&#39;s blog">
 <meta property="og:description" content="OOP三大核心思想：抽象、继承和多态（动态绑定）">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/10/24/qG3HOzX9Q4kTyhs.png">
 <meta property="article:published_time" content="2021-10-24T07:38:00.000Z">
-<meta property="article:modified_time" content="2021-10-24T09:34:02.383Z">
+<meta property="article:modified_time" content="2021-10-25T08:57:29.743Z">
 <meta property="article:author" content="wuyifff">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/10/24/qG3HOzX9Q4kTyhs.png">
@@ -113,6 +113,18 @@
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
               </a>
             </li>
           
@@ -216,7 +228,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年10月24日 下午
+                  本文最后更新于：2021年10月25日 下午
                 
               </p>
             
@@ -235,8 +247,6 @@
 <p>基类的函数net_price前面加上virtual表示其是一个虚函数，虚函数的作用是为了实现多态。一旦基类定义了虚函数，那么派生的子类就可以通过重新定义来覆盖基类的虚函数实现。派生类可以省略virtual关键字，尽管子类中不声明virtual，覆盖函数定义仍然还是虚函数。(<strong>但是还是应该带上virtual,这样间接继承就免得去看基类的实现</strong>)</p>
 <p>C++11标准允许派生类<strong>显式地注明</strong>它将使用哪个成员函数改写基类的虚函数，这就是上例中override关键字的作用。==（好处是万一同名参数形参列表不同将会overrid失败，编译器将会报错帮助你发现）==</p>
 <p>virtual实现的动态绑定怎么用呢？<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1dE41167hJ?p=22&share_source=copy_web"><strong>（翁恺c++ p23-24）</strong></a></p>
-<iframe src="//player.bilibili.com/player.html?aid=71983220&bvid=BV1dE41167hJ&cid=124727443&page=22" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
-
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">print_total</span><span class="hljs-params">(ostream &amp;os, <span class="hljs-keyword">const</span> Quote &amp;item, <span class="hljs-keyword">size_t</span> n)</span></span><br><span class="hljs-function"></span>&#123;<br>  	<span class="hljs-comment">//如果item是Quote对象，调用Quote::net_price</span><br>  	<span class="hljs-comment">//如果item是Bulk_quote对象，调用Bulk_quote::net_price</span><br>    <span class="hljs-keyword">double</span> ret = item.<span class="hljs-built_in">net_price</span>(n);<br>  	os &lt;&lt; <span class="hljs-string">&quot;ISBN: &quot;</span> &lt;&lt; item.<span class="hljs-built_in">isbn</span>()	<span class="hljs-comment">//调用Quote::isbn</span><br>      	&lt;&lt; <span class="hljs-string">&quot; # sold: &quot;</span> &lt;&lt; n &lt;&lt; <span class="hljs-string">&quot; total due: &quot;</span> &lt;&lt; ret &lt;&lt; endl;<br>  	<span class="hljs-keyword">return</span> ret;<br>&#125;<br><br><span class="hljs-built_in">print_total</span>(cout, basic, <span class="hljs-number">20</span>);	<span class="hljs-comment">//basic是Quote对象</span><br><span class="hljs-built_in">print_total</span>(cout, bulk, <span class="hljs-number">20</span>);	<span class="hljs-comment">//bulk是Bulk_quote对象</span><br></code></pre></div></td></tr></table></figure>
 
 <p>可以看到尽管形参是一个const Quote对象的引用，但可以传入一个派生类对象作为实参，而一旦如此，对形参调用类成员函数时，就会进行动态绑定，即派生类调用派生类重新定义的虚函数体，基类调用基类定义的虚函数体。</p>
@@ -379,6 +389,13 @@
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/c/">c++</a>
+                    
+                  </div>
+                
                 
               </div>
               
@@ -397,7 +414,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/10/20/12.%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98/">
+                      <a href="/2021/10/20/c++/12.%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98/">
                         <span class="hidden-mobile">C++ primer 读书笔记 chapter 12 动态内存与智能指针</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
