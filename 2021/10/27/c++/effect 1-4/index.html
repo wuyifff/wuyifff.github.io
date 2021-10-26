@@ -1,0 +1,654 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://img1.baidu.com/it/u=4218313265,1883370397&amp;fm=26&amp;fmt=auto">
+  <link rel="icon" href="https://img1.baidu.com/it/u=4218313265,1883370397&amp;fm=26&amp;fmt=auto">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="第一章：让自己习惯C++  条款1-4">
+  <meta name="author" content="wuyifff">
+  <meta name="keywords" content="">
+  <meta name="description" content="第一章：让自己习惯C++  条款1-4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="effective C++ 第三版 第一章">
+<meta property="og:url" content="https://wuyifff.github.io/2021/10/27/c++/effect%201-4/index.html">
+<meta property="og:site_name" content="wuyifff&#39;s blog">
+<meta property="og:description" content="第一章：让自己习惯C++  条款1-4">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/10/26/4p1wB3K5Msl9hf7.png">
+<meta property="og:image" content="https://i.loli.net/2021/10/26/RGD49qci21xNZhm.png">
+<meta property="article:published_time" content="2021-10-26T16:12:00.000Z">
+<meta property="article:modified_time" content="2021-10-26T16:24:54.655Z">
+<meta property="article:author" content="wuyifff">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2021/10/26/4p1wB3K5Msl9hf7.png">
+  
+  <title>effective C++ 第三版 第一章 - wuyifff&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wuyifff.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":" ","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="wuyifff's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>wuyifff&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://img0.baidu.com/it/u=336294190,1675821935&fm=26&fmt=auto') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="effective C++ 第三版 第一章">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      wuyifff
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-10-27 00:12" pubdate>
+        2021年10月27日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span>
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">effective C++ 第三版 第一章</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年10月27日 凌晨
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="守则01：把C-看做一个语言的集合，而不是单一的语言"><a href="#守则01：把C-看做一个语言的集合，而不是单一的语言" class="headerlink" title="守则01：把C++看做一个语言的集合，而不是单一的语言"></a><strong>守则01：把C++看做一个语言的集合，而不是单一的语言</strong></h1><blockquote>
+<p>“C++ is a federation of languages”</p>
+</blockquote>
+<p>早期的C++只是叫”C with classes”，但发展到今天已经成为一个多重泛型编程语言(Multi-paradigm programming language)，它具有4种“子语言”:</p>
+<ul>
+<li>C</li>
+<li>面向对象的C++</li>
+<li>模板C++</li>
+<li>STL</li>
+</ul>
+<p><strong>高效的C++编程守则取决于你所使用的“子语言”</strong></p>
+<p>例如**:**</p>
+<ul>
+<li>在C中，一般使用<strong>值传递</strong> (Pass by value)</li>
+<li>在**面向对象的C++和模板C++**中，使用常量引用传递 (Pass by const reference)更加高效</li>
+<li>对于STL，因为迭代器是基于指针构造而成，直接使用<strong>值传递</strong>即可</li>
+</ul>
+<h1 id="守则02：尽量使用const-enum-inline-减少宏变量-define的使用"><a href="#守则02：尽量使用const-enum-inline-减少宏变量-define的使用" class="headerlink" title="守则02：尽量使用const, enum, inline, 减少宏变量#define的使用"></a><strong>守则02：尽量使用const, enum, inline, 减少宏变量#define的使用</strong></h1><p><strong>或者说，尽量多用编译器，少用预处理器</strong></p>
+<blockquote>
+<p>“Prefer the compiler to the preprocessor”</p>
+</blockquote>
+<blockquote>
+<p>C++提供的编译预处理功能主要有以下三种：<br>　　① 宏定义<br>　　② 文件包含<br>　　③条件编译</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> A 1.653   </span><br></code></pre></div></td></tr></table></figure>
+
+<p>在上面这个语句中，字符串’A’是不会被编译器看到的，而编译器看到的是’1.653’，这就会导致在调试过程中，<strong>编译器的错误信息只显示’1.653’而不是’A’，让你不知从何下手</strong>。</p>
+<p>解决方法：定义全局常量</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> A = <span class="hljs-number">1.653</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>使用全局常量还有一个好处：预处理器只会把每次对’A’的引用变成’1.653’而不管其是否已经存在，这就导致多次引用’A’会造成多个重复对象出现在目标代码中(Object code)，造成资源浪费。</p>
+<p><strong>当定义或声明全局变量时，常数指针和类的常数需要另加考虑</strong></p>
+<ul>
+<li><strong>对于指针</strong></li>
+</ul>
+<p>对于指针要把指针本身和它指向的数据都定义为const，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* <span class="hljs-keyword">const</span> myWord = <span class="hljs-string">&quot;Hello&quot;</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>(指向常量的常量指针)</p>
+<p>在C++中可以更方便地使用std::string这样基于char*类型的推广，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">const</span> std::string <span class="hljs-title">myWord</span><span class="hljs-params">(<span class="hljs-string">&quot;Hello&quot;</span>)</span></span>;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li><strong>对于类的常数</strong></li>
+</ul>
+<p>声明为类的私有静态成员，这样既保证变量只能被这个类的对象接触到，又不会生成多个拷贝</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Player</span>&#123;</span><br>  <span class="hljs-keyword">private</span>:<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> numPlayer = <span class="hljs-number">5</span>;<br>........<br></code></pre></div></td></tr></table></figure>
+
+<p><strong>注意</strong>，因为此处是类的成员声明范围内，所以上面只是变量的声明和初始化，而并非定义，因此如果想获取变量的地址，需要在别处另加定义。这个定义不能有任何赋值语句，因为在类内已经规定为const:</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> Player::numPlayer;<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="额外的补充：类内const推荐用static"><a href="#额外的补充：类内const推荐用static" class="headerlink" title="额外的补充：类内const推荐用static"></a><strong>额外的补充：类内const推荐用static</strong></h2><p>细节可见（4）</p>
+<ul>
+<li><p><strong>static的const</strong>对象赋初值与否编译器都能通过</p>
+<p><img src="https://i.loli.net/2021/10/26/4p1wB3K5Msl9hf7.png" alt="image-20211026232229655"></p>
+</li>
+<li><p><strong>非static的const</strong>对象不允许赋初值</p>
+<p>赋值会报错</p>
+<blockquote>
+<p>error: non-static const member ‘const int A::NUM_TURNS’, can’t use default assignment operator</p>
+</blockquote>
+<p>不赋值且无构造函数也会报错</p>
+<blockquote>
+<p>error: non-static const member ‘const int A::NUM_TURNS’, can’t use default assignment operator</p>
+</blockquote>
+<p><img src="https://i.loli.net/2021/10/26/RGD49qci21xNZhm.png" alt="image-20211026232615673"></p>
+</li>
+</ul>
+<p><strong>对于#define的宏函数，尽量使用inline修饰的函数来代替#define</strong></p>
+<p>C中经常会用形如<code>#define max(a,b) ((a) &gt; (b) ? (a) : (b))</code>这样的宏而不是定义成函数，一方面为了代码编写简洁而另一方面，又不增加函数调用的开销。</p>
+<p>为什么要加()呢，因为怕运算符优先级问题引起歧义，这在C中已是路人皆知的技巧。</p>
+<p>但实际上这种手法捉襟见肘，缺陷很多，比如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">int</span> a = <span class="hljs-number">5</span>, b = <span class="hljs-number">0</span>;<br><span class="hljs-built_in">max</span>(++a, b);	<span class="hljs-comment">//a的值会增加2次</span><br><span class="hljs-built_in">max</span>(++a, b+<span class="hljs-number">10</span>);	<span class="hljs-comment">//a的值只增加了1次</span><br></code></pre></div></td></tr></table></figure>
+
+<p>虽然有点故意刁难的意思。</p>
+<p>C++的inline完全规避了这种缺陷，可以改为inline函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;</span><br><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-keyword">const</span> T&amp; <span class="hljs-title">max</span><span class="hljs-params">(<span class="hljs-keyword">const</span> T&amp; a, <span class="hljs-keyword">const</span> T&amp; b)</span></span>&#123; <span class="hljs-keyword">return</span> a &gt; b ? a : b; &#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>inline还有一个好处就是现代的编译器都比程序员聪明，你<strong>显式声明inline实际上最终不一定是inline，而有一些即使不声明inline也会被编译器优化成inline</strong>，这是C++的一大性能优化。</p>
+<h1 id="守则03-尽可能使用const关键字"><a href="#守则03-尽可能使用const关键字" class="headerlink" title="守则03: 尽可能使用const关键字"></a><strong>守则03: 尽可能使用const关键字</strong></h1><blockquote>
+<p>“Use const whenever possible”</p>
+</blockquote>
+<ul>
+<li><strong>指针与const:</strong></li>
+</ul>
+<p>记忆法: const在星号左边修饰数据，const在星号右边修饰指针</p>
+<p>以及如下两个语句的功能是相同的，不需要对此产生困惑:</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* pw;             <span class="hljs-comment">//都表示指向常量char的指针</span><br><span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span>* pw;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li><strong>迭代器与const</strong></li>
+</ul>
+<p>迭代器在功能上相当于指向某类型T的指针 T*</p>
+<p>区分 const iterator 和 const_iterator</p>
+<p>因此，如果想定义某迭代器指向一个常数，使用const iterator是不可以的，这样只相当于定义一个迭代器为一个常量(T* const)，例如:（<strong>相当于指向常量的指针</strong>）</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">const</span> std::vector&lt;<span class="hljs-keyword">int</span>&gt;::iterator it = v.<span class="hljs-built_in">begin</span>(); <span class="hljs-comment">//注意，此声明只表示迭代器本身是常量     </span><br>*it = <span class="hljs-number">10</span>;                                        <span class="hljs-comment">//编译通过，迭代器是常量，数据可以被修改</span><br>++it;                                            <span class="hljs-comment">//编译失败！因为const迭代器不允许改变！</span><br></code></pre></div></td></tr></table></figure>
+
+<p>解决方法，使用const_iterator:（<strong>相当于指针本身为常量</strong>）</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">std::vector&lt;<span class="hljs-keyword">int</span>&gt;::const_iterator it = v.<span class="hljs-built_in">begin</span>();  <span class="hljs-comment">//使用了const_iterator类型</span><br>*it = <span class="hljs-number">10</span>;                                         <span class="hljs-comment">//编译失败，数据不允许被改变！</span><br>++it;     <br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li><strong>尽量使用const可以帮助调试</strong></li>
+<li><strong>类的成员函数与const</strong></li>
+<li><strong>成员函数的常量性(Constness)</strong></li>
+<li><strong>在定义常量与非常量成员函数时，避免代码重复</strong></li>
+</ul>
+<p>既然两个版本的成员函数都要有，为什么又要避免重复?</p>
+<p>其实在这里指的是函数的实现要避免重复。试想某函数既要检查边界范围，又要记录读取历史，还要检查数据完整性，这样的代码复制一遍，既不显得美观，又增加了代码维护的难度和编译时间。因此，我们<strong>可以使用非常量的函数来调用常量函数。</strong>(绝对不能是常量调用非常量版本)</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>&amp; <span class="hljs-keyword">operator</span>[](std::<span class="hljs-keyword">size_t</span> pos) <span class="hljs-keyword">const</span>&#123;....&#125;<br><span class="hljs-keyword">char</span>&amp; <span class="hljs-keyword">operator</span>[](std::<span class="hljs-keyword">size_t</span> pos)&#123;<br>  <span class="hljs-keyword">return</span><br>    <span class="hljs-keyword">const_cast</span>&lt;<span class="hljs-keyword">char</span>&amp;&gt;(                       <span class="hljs-comment">//const_cast去掉const关键字，并转换为char&amp;</span><br>      <span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-keyword">const</span> Text&amp;&gt;(*<span class="hljs-keyword">this</span>)   <span class="hljs-comment">//给当前变量加上const关键字，才可以调用const操作符</span><br>      						[position]);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>为了避免无限递归调用当前非常量的操作符，我们需要将(*this)转换为const Text&amp;类型才能保证安全调用const的操作符，最后去掉const关键字(const_cast)再将其返回，巧妙避免了代码的大段复制。</p>
+<h1 id="守则04-在使用前保证对象是初始化的"><a href="#守则04-在使用前保证对象是初始化的" class="headerlink" title="守则04: 在使用前保证对象是初始化的"></a><strong>守则04: 在使用前保证对象是初始化的</strong></h1><ul>
+<li><strong>自有类型(built-in type)的初始化</strong></li>
+</ul>
+<p>C++的自有类型继承于C，因此不能保证此类型的变量在定义时被初始化。使用未初始化的数据可能会导致程序不正常运作，因此在定义变量的时候，需要对其进行初始化。</p>
+<ul>
+<li><strong>类的初始化</strong></li>
+</ul>
+<p>对于用户自定义的类，我们需要构造函数(constructor)来完成此类的初始化</p>
+<p>C++规定，在<strong>进入</strong>构造函数<strong>之前</strong>，如果用户没有规定初始化过程，C++将自动调用各成员对应类型的默认构造函数。</p>
+<p>这样一来，此构造函数就相当于先调用了C++的默认构造函数，又做了一次赋值操作覆盖掉了先前的结果，造成了浪费。</p>
+<p>解决方法：使用**初始化列表(initialization list)**，C++就不必额外调用默认构造函数了。</p>
+<ul>
+<li><p><strong>某些初始化是语法必要的</strong></p>
+<p>例如<strong>在定义引用(reference)和常量(const)时，不将其初始化会导致编译器报错</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> a;                <span class="hljs-comment">//报错，需要初始化！</span><br><span class="hljs-keyword">int</span>&amp; b;                     <span class="hljs-comment">//报错，需要初始化！</span><br><span class="hljs-comment">//现在对其进行初始化：</span><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> a = <span class="hljs-number">3</span>;            <span class="hljs-comment">//编译通过</span><br><span class="hljs-keyword">int</span> c = <span class="hljs-number">3</span>;<br><span class="hljs-keyword">int</span>&amp; b = c;                 <span class="hljs-comment">//编译通过！</span><br></code></pre></div></td></tr></table></figure></li>
+<li><p><strong>数据初始化的顺序</strong></p>
+</li>
+</ul>
+<p>在继承关系中，<strong>基类(base class)总是先被初始化</strong>。</p>
+<p>在同一类中，成员数据的==初始化顺序与其声明顺序是一致的==，<strong>而不是初始化列表的顺序</strong>。因此，为了代码一致性，要保证初始化列表的顺序与成员数据声明的顺序是一样的。</p>
+<ul>
+<li><strong>初始化非本地静态对象</strong></li>
+</ul>
+<p><strong>编译单元</strong>(translation unit): 可以让编译器生成代码的基本单元，一般一个源代码文件就是一个编译单元。</p>
+<p><strong>非本地静态对象</strong>(non-local static object): 静态对象可以是在<strong>全局范围定义的变量</strong>，在名空间范围定义的变量，函数范围内定义为static的变量，类的范围内定义为static的变量，而<strong>除了函数中的静态对象是本地的，其他都是非本地的。</strong></p>
+<p>此外注意，静态对象存在于程序的开始到结束，所以它不是基于堆(heap)或者栈(stack)的。初始化的静态对象存在于.data中，未初始化的则存在于.bss中。</p>
+<p>回到问题，现有以下服务器代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Server</span>&#123;</span>...&#125;;     <br><span class="hljs-keyword">extern</span> Server server;                 <span class="hljs-comment">//在全局范围声明外部对象server，供外部使用</span><br></code></pre></div></td></tr></table></figure>
+
+<p>又有某客户端：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span>&#123;</span>...&#125;;<br>Client::<span class="hljs-built_in">Client</span>(...)&#123;<br>    number = server.number;<br>&#125;<br><br>Client client;                       <span class="hljs-comment">//在全局范围定义client对象，自动调用了Client类的构造函数</span><br></code></pre></div></td></tr></table></figure>
+
+<p>以上问题在于，定义对象client自动调用了Client类的构造函数，此时需要读取对象server的数据，<strong>但全局变量的不可控性让我们不能保证对象server在此时被读取时是初始化的</strong>。试想如果还有对象client1, client2等等不同的用户读写，我们不能保证当前server的数据是我们想要的。</p>
+<p><strong>解决方法:</strong> 将全局变量变为本地静态变量</p>
+<p>使用一个函数，<strong>只用来定义一个本地静态变量并返回它的引用</strong>。==因为C++规定在本地范围(函数范围)内定义某静态对象时，当此函数被调用，该静态变量一定会被初始化。==(singleton模式)</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Server</span>&#123;</span>...&#125;;<br><br><span class="hljs-function">Server&amp; <span class="hljs-title">server</span><span class="hljs-params">()</span></span>&#123;                         <span class="hljs-comment">//将直接的声明改为一个函数</span><br>    <span class="hljs-keyword">static</span> Server server;<br>    <span class="hljs-keyword">return</span> server;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span>&#123;</span>...&#125;;<br><br>Client::<span class="hljs-built_in">client</span>()&#123;                        <span class="hljs-comment">//客户端构造函数通过函数访问服务器数据</span><br>    number = <span class="hljs-built_in">server</span>().number;<br>&#125;<br><br><span class="hljs-function">Client&amp; <span class="hljs-title">client</span><span class="hljs-params">()</span></span>&#123;                        <span class="hljs-comment">//同样将客户端的声明改为一个函数</span><br>    <span class="hljs-keyword">static</span> Client client;<br>    <span class="hljs-keyword">return</span> client;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+
+
+<h1 id="第一章总结"><a href="#第一章总结" class="headerlink" title="第一章总结"></a>第一章总结</h1><ol>
+<li><strong>视 C++ 为一个语言联邦（C、Object-Oriented C++、Template C++、STL）</strong></li>
+<li><strong>宁可以编译器替换预处理器（尽量以 <code>const</code>、<code>enum</code>、<code>inline</code> 替换 <code>#define</code>）</strong></li>
+<li><strong>尽可能使用 const</strong></li>
+<li><strong>确定对象被使用前已先被初始化（构造时赋值（copy 构造函数）比 default 构造后赋值（copy assignment）效率高）</strong></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/c/">c++</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/25/c++/13.%E6%8B%B7%E8%B4%9D%E6%8E%A7%E5%88%B6/">
+                        <span class="hidden-mobile">C++ primer 读书笔记 chapter 13 拷贝控制</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
