@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/10/24/qG3HOzX9Q4kTyhs.png">
 <meta property="article:published_time" content="2021-10-24T07:38:00.000Z">
-<meta property="article:modified_time" content="2021-10-25T08:57:29.743Z">
+<meta property="article:modified_time" content="2021-11-06T08:46:24.921Z">
 <meta property="article:author" content="wuyifff">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://i.loli.net/2021/10/24/qG3HOzX9Q4kTyhs.png">
@@ -241,7 +241,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年10月25日 下午
+                  本文最后更新于：2021年11月6日 下午
                 
               </p>
             
@@ -271,7 +271,6 @@
 
 <p><strong>为什么析构函数要定义成虚函数呢？因为我们往往使用多态时，会使用父类指针指向子类对象，而后续可能会delete父类指针，如果析构函数不是虚函数，那么delete一个子类对象不会调用子类对象的析构，而是直接调用父类的析构了，这与预期不符。</strong></p>
 <p>所以，==拥有虚函数的父类的析构函数往往也是虚函数==（因为多态需要虚函数来实现）。</p>
-<p>这里的一个疑点：类成员protected权限是什么？</p>
 <h3 id="成员函数与继承"><a href="#成员函数与继承" class="headerlink" title="成员函数与继承"></a>成员函数与继承</h3><p>派生类可以继承基类的成员，基类的成员函数有两种：希望派生类进行覆盖而被声明为virtual的虚函数、希望派生类直接使用的函数。</p>
 <p>任何构造函数之外的非静态函数都可以是虚函数。==构造函数不能virtual！==</p>
 <blockquote>
@@ -287,16 +286,35 @@
 
 <p>派生类对象包含多个组成部分：含有派生类自己定义的(非静态)成员的子对象，以及一个与该类继承的基类对应的子对象，如果有多个基类，那么也就有对应多个子对象。</p>
 <p>Bulk_quote对象</p>
-<p>| bookNo | 从Quote继承</p>
-<p>| price |</p>
-<p>| min_qty | Bulk_quote自定义的成员</p>
-<p>| discount |</p>
-<p>之所以能完成继承，本质上是因为派生类对象中拥有基类对象。</p>
-<p>C++标准没有规定派生类对象的内存如何分布，有兴趣可以看看《深度探索C++对象模型》，当然由于这本书比较老了，所以现在主流编译器的设计和书中内容有较大差异，但仍然极有价值，毕竟授人以渔。</p>
+<table>
+<thead>
+<tr>
+<th align="center">变量名</th>
+<th align="center">来源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">bookNo</td>
+<td align="center">从Quote继承</td>
+</tr>
+<tr>
+<td align="center">price</td>
+<td align="center">从Quote继承</td>
+</tr>
+<tr>
+<td align="center">min_qty</td>
+<td align="center">Bulk_quote自定义的成员</td>
+</tr>
+<tr>
+<td align="center">discount</td>
+<td align="center">Bulk_quote自定义的成员</td>
+</tr>
+</tbody></table>
+<p>之所以能完成继承，<strong>本质上是因为派生类对象中拥有基类对象</strong>。</p>
 <p>因为派生类对象中含有与其基类对应的组成部分，所以可以把派生类对象当成基类对象使用，也能将基类指针或引用绑定到派生类对象的基类部分上。</p>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">Quote item;			<span class="hljs-comment">//基类对象</span><br>Bulk_quote bulk;	<span class="hljs-comment">//派生类对象</span><br>Quote *p = &amp;item;	<span class="hljs-comment">//p指向Quote对象</span><br>p = &amp;bulk;			<span class="hljs-comment">//p指向bulk的Quote部分</span><br>Quote &amp;r = bulk;	<span class="hljs-comment">//r绑定到bulk的Quote部分</span><br></code></pre></div></td></tr></table></figure>
 
-<p>这种称为派生类到基类的类型转换，编译器会隐式执行派生类到基类的转换。</p>
+<p>这种称为派生类到基类的类型转换（upcasting，向上造型），编译器会隐式执行派生类到基类的转换。</p>
 <h3 id="派生类构造函数"><a href="#派生类构造函数" class="headerlink" title="派生类构造函数"></a>派生类构造函数</h3><figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-built_in">Bulk_quote</span>(<span class="hljs-keyword">const</span> std::string &amp;book, <span class="hljs-keyword">double</span> p, std::<span class="hljs-keyword">size_t</span> qty, <span class="hljs-keyword">double</span> disc) : <span class="hljs-built_in">Quote</span>(book, p), <span class="hljs-built_in">min_qty</span>(qty), <span class="hljs-built_in">discount</span>(disc)&#123;&#125;<br></code></pre></div></td></tr></table></figure>
 
 <p>初始化列表中调用了Quote的构造函数，用来负责初始化基类部分。</p>
@@ -304,7 +322,7 @@
 <p>派生类的构造器总是先初始化基类部分，再按声明顺序依次初始化派生类成员。</p>
 <h3 id="派生类使用基类的成员"><a href="#派生类使用基类的成员" class="headerlink" title="派生类使用基类的成员"></a>派生类使用基类的成员</h3><figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">Bulk_quote::net_price</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> cnt)</span> <span class="hljs-keyword">const</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">if</span>(cnt &gt;= min_qty)<br>      	<span class="hljs-keyword">return</span> cnt * (<span class="hljs-number">1</span> - discount) * price;<br>  	<span class="hljs-keyword">else</span><br>      	<span class="hljs-keyword">return</span> cnt * price;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
-<h3 id="继承与静态成员"><a href="#继承与静态成员" class="headerlink" title="继承与静态成员"></a>继承与静态成员</h3><p>如果基类定义了静态成员，则整个继承体系中只存在该成员的唯一定义。不论基类中派生出多少个派生类，对每个静态成员来说都只存在唯一的一个实例。</p>
+<h3 id="继承与静态成员"><a href="#继承与静态成员" class="headerlink" title="继承与静态成员"></a>继承与静态成员</h3><p>如果基类定义了静态成员，则整个继承体系中只存在该成员的唯一定义。<strong>不论基类中派生出多少个派生类，对每个静态成员来说都只存在唯一的一个实例。</strong></p>
 <blockquote>
 <p>因为静态成员实际上是全局的，当然是单例。只是语法上为了关系结构，把它放在类中定义。</p>
 </blockquote>
@@ -313,7 +331,6 @@
 <p>C++11可以定义一种不允许其他类继承的类。</p>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NoDerived</span> <span class="hljs-keyword">final</span>&#123;</span><span class="hljs-comment">/* */</span>&#125;;	<span class="hljs-comment">//NoDerived不能做基类</span><br></code></pre></div></td></tr></table></figure>
 
-<p>嗯，C++居然反向抄袭了java。</p>
 <h3 id="类型转换与继承"><a href="#类型转换与继承" class="headerlink" title="类型转换与继承"></a>类型转换与继承</h3><p>通常当把引用或指针绑定到一个对象时，引用或指针的类型得和对象的类型一致，或者对象类型含有一个可接受的const类型转换规则。但对于继承类来说还有一个特例，那就是可以把基类的指针或引用绑定到派生类对象上，为了实现多态。</p>
 <blockquote>
 <p>智能指针也支持这一类型转换，所以可以将派生类对象指针存在基类智能指针之内。</p>
@@ -340,7 +357,7 @@
 
 <p>纯虚函数无需定义，=0只能出现在类内部的虚函数声明语句处。</p>
 <p>纯虚函数也可以定义，但必须在类外部定义，大部分情况不会定义，因为这与我们的使用意图相悖。</p>
-<p>类只要含有纯虚函数，就是一个抽象基类，抽象基类负责定义接口，后续的其他类来覆盖接口。不能创建抽象基类的对象，抽象基类需要派生类去继承。</p>
+<p>==类只要含有纯虚函数，就是一个抽象基类==，抽象基类负责定义接口，后续的其他类来覆盖接口。<strong>不能创建抽象基类的对象，抽象基类需要派生类去继承。</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bulk_quote</span> :</span> <span class="hljs-keyword">public</span> Disc_quote&#123;<br><span class="hljs-keyword">public</span>:<br>  	<span class="hljs-built_in">Bulk_quote</span>() = <span class="hljs-keyword">default</span>;<br>  	<span class="hljs-built_in">Bulk_quote</span>(<span class="hljs-keyword">const</span> std::string &amp;book, <span class="hljs-keyword">double</span> price, std::<span class="hljs-keyword">size_t</span> qty, <span class="hljs-keyword">double</span> disc):<span class="hljs-built_in">Disc_quote</span>(book, price, qty, disc)&#123;&#125;<br>  	<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">net_price</span><span class="hljs-params">(std::<span class="hljs-keyword">size_t</span>)</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">override</span></span>;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
 
 <p>直接基类是Disc_quote，间接基类是Quote。各个类控制自己的构造器，构造器会递归下去，先执行根基类构造器，最后执行自身的构造。继承链的构造器形成了层的概念。</p>
@@ -348,7 +365,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span>&#123;</span><br><span class="hljs-keyword">protected</span>:<br>  	<span class="hljs-keyword">int</span> prot_mem;<br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Sneaky</span> :</span> <span class="hljs-keyword">public</span> Base&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">friend</span> <span class="hljs-keyword">void</span> <span class="hljs-title">clobber</span><span class="hljs-params">(Sneaky&amp;)</span></span>;	<span class="hljs-comment">//可以访问Sneaky::prot_mem</span><br>  	<span class="hljs-function"><span class="hljs-keyword">friend</span> <span class="hljs-keyword">void</span> <span class="hljs-title">clobber</span><span class="hljs-params">(Base&amp;)</span></span>;	<span class="hljs-comment">//不能访问Base::prot_mem</span><br>  	<span class="hljs-keyword">int</span> j;	<span class="hljs-comment">//j默认是private</span><br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">clobber</span><span class="hljs-params">(Sneaky &amp;s)</span></span>&#123;s.j = s.prot_mem = <span class="hljs-number">0</span>;&#125;<span class="hljs-comment">//clobber可以访问Sneaky的private和protected成员</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">clobber</span><span class="hljs-params">(Base &amp;b)</span></span>&#123;b.prot_mem = <span class="hljs-number">0</span>;&#125;<span class="hljs-comment">//clobber不能访问Base的protected成员</span><br></code></pre></div></td></tr></table></figure>
 
 <p>之所以有这种限制，是因为如果第二个用法合法的话，那么就可以通过定义一个形如Sneaky的新类来规避掉protected提供的访问保护了。</p>
-<p>所以，派生类的成员和友元只能访问派生类对象中的基类部分的受保护成员，而不能访问普通的基类对象中的成员。</p>
+<p>所以，<u>派生类的成员和友元</u>只能访问<strong>派生类对象中的基类部分</strong>的受保护成员，而<u>不能访问</u><strong>普通的基类对象中的任何成员</strong>。</p>
 <h3 id="public、private和protected"><a href="#public、private和protected" class="headerlink" title="public、private和protected"></a>public、private和protected</h3><figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span>&#123;</span><br><span class="hljs-keyword">public</span>:<br>  	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pub_mem</span><span class="hljs-params">()</span></span><br><span class="hljs-function"><span class="hljs-keyword">protected</span>:</span><br><span class="hljs-function">  	int prot_mem;</span><br><span class="hljs-keyword">private</span>:<br>  	<span class="hljs-keyword">char</span> priv_mem;<br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Pub_Derv</span> :</span> <span class="hljs-keyword">public</span> Base&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>&#123;<span class="hljs-keyword">return</span> prot_mem;&#125;<span class="hljs-comment">//正确：派生类能访问protected成员</span><br>  	<span class="hljs-function"><span class="hljs-keyword">char</span> <span class="hljs-title">g</span><span class="hljs-params">()</span></span>&#123;<span class="hljs-keyword">return</span> priv_mem;&#125;<span class="hljs-comment">//错误：private成员对于派生类来说是不可访问的</span><br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Priv_Derv</span> :</span> <span class="hljs-keyword">private</span> Base&#123;<br>    <span class="hljs-comment">//private不影响派生类的访问权限</span><br>  	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">f1</span><span class="hljs-params">()</span> <span class="hljs-keyword">const</span></span>&#123;<span class="hljs-keyword">return</span> prot_mem;&#125;<br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Prot_Derv</span> :</span> <span class="hljs-keyword">protected</span> Base&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">f1</span><span class="hljs-params">()</span> <span class="hljs-keyword">const</span></span>&#123;<span class="hljs-keyword">return</span> prot_mem;&#125;	<span class="hljs-comment">//依然是protected</span><br>&#125;<br>Pub_Derv d1;	<span class="hljs-comment">//继承自Base的成员遵循原有的访问说明符</span><br>Priv_Derv d2;	<span class="hljs-comment">//继承自Base的成员无论此前是什么权限，都变成private</span><br>d1.<span class="hljs-built_in">pub_mem</span>();	<span class="hljs-comment">//正确：pub_mem在派生类中是public的</span><br>d2.<span class="hljs-built_in">pub_mem</span>();	<span class="hljs-comment">//错误：pub_mem在派生类中是private的</span><br><br>Prot_Derv d3;	<span class="hljs-comment">//继承自Base的成员如果是public，会变成protected，其他不变</span><br>d3.<span class="hljs-built_in">pub_mem</span>();	<span class="hljs-comment">//错误，pub_mem是protected，只能成员和友元访问，外部不行</span><br></code></pre></div></td></tr></table></figure>
 
 <h3 id="派生类向基类转换的可访问性"><a href="#派生类向基类转换的可访问性" class="headerlink" title="派生类向基类转换的可访问性"></a>派生类向基类转换的可访问性</h3><ul>
@@ -390,7 +407,7 @@
 
 <p>编译器会生成形如:<code>derived(params) : base(args)&#123;&#125;</code>的构造函数。这里的using作用给编译器，而不是当前作用域。</p>
 <p>using声明语句不能指定constexpr或explicit，所以它继承基类的修饰。</p>
-<p>基类构造函数含有默认实参时，默认实参不会被继承。相反，派生类或获得多个继承的构造函数，每个构造函数分别省略掉一个含有默认实参的形参。</p>
+<p><strong>基类构造函数含有默认实参时，默认实参不会被继承。相反，派生类或获得多个继承的构造函数，每个构造函数分别省略掉一个含有默认实参的形参。</strong></p>
 <p>如果基类有好几个构造函数，则大多数情况下派生类继承所有构造函数。除了两个例外，其一是派生类可以继承一部分构造函数，而为其他构造函数定义自己的版本。如果派生类定义的构造函数与基类构造函数具有相同的参数列表，则这些构造函数不会被继承。其二是默认、拷贝和移动构造不会被继承。它们按照正常规则来合成，游离于三界之外。</p>
 <h2 id="容器与继承"><a href="#容器与继承" class="headerlink" title="容器与继承"></a>容器与继承</h2><figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">vector&lt;Quote&gt; basket;<br>basket.<span class="hljs-built_in">push_back</span>(<span class="hljs-built_in">Quote</span>(<span class="hljs-string">&quot;0-201-82470-1&quot;</span>, <span class="hljs-number">50</span>));<br><span class="hljs-comment">//正确，但是只能把对象的Quote部分拷贝给basket</span><br>basket.<span class="hljs-built_in">push_back</span>(<span class="hljs-built_in">Bulk_quote</span>(<span class="hljs-string">&quot;0-201-54858-8&quot;</span>, <span class="hljs-number">50</span>, <span class="hljs-number">10</span>, <span class="hljs-number">.25</span>));<br><span class="hljs-comment">//调用Quote定义的版本</span><br>cout &lt;&lt; basket.<span class="hljs-built_in">back</span>().<span class="hljs-built_in">net_price</span>(<span class="hljs-number">15</span>) &lt;&lt; endl;<br></code></pre></div></td></tr></table></figure>
 
