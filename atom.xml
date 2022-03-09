@@ -6,7 +6,7 @@
   <link href="https://wuyifff.github.io/atom.xml" rel="self"/>
   
   <link href="https://wuyifff.github.io/"/>
-  <updated>2021-11-02T03:16:43.499Z</updated>
+  <updated>2022-03-09T01:44:00.000Z</updated>
   <id>https://wuyifff.github.io/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="https://wuyifff.github.io/2022/03/09/DS/1%20introduc%208b260/"/>
+    <id>https://wuyifff.github.io/2022/03/09/DS/1%20introduc%208b260/</id>
+    <published>2022-03-09T09:53:51.849Z</published>
+    <updated>2022-03-09T01:44:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-introduction-to-Distributed-Systems"><a href="#1-introduction-to-Distributed-Systems" class="headerlink" title="1. introduction to Distributed Systems"></a>1. introduction to Distributed Systems</h1><h1 id="1-1-About-Distributed-Systems"><a href="#1-1-About-Distributed-Systems" class="headerlink" title="1.1 About Distributed Systems"></a>1.1 About <strong><strong>Distributed Systems</strong></strong></h1><p>单机的并发<strong>（concurrency）</strong>又称为是共享内存(shared-memory)的并发，通过指针或变量可以很方便的进行</p><p>而非单机场景下，不同的电脑可以并行执行程序，他们只能通过网络通信，构成分布式系统</p><p>分布式系统中每一个电脑被称为<strong>结点(node)，结点可以是任何互相连接的计算设备</strong></p><h3 id="为何构建分布式系统？（优点）"><a href="#为何构建分布式系统？（优点）" class="headerlink" title="为何构建分布式系统？（优点）"></a>为何构建分布式系统？（优点）</h3><ol><li>一些应用是天然(intrinsically)的分布式系统，例如接打电话</li><li>分布式系统比单机更加<strong>可靠</strong></li><li>分布式系统有更好的<strong>性能</strong>，更快的响应速度（地理相邻）</li><li>一些<strong>数据太大</strong>而不能放在一个机器上</li></ol><h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ol><li><strong>网络错误</strong>导致结点无法相互通信</li><li>结点可能会崩溃(crash)、运行缓慢</li></ol><p>因此：</p><ul><li>我们需要有方法检测crash</li><li>分布式系统需要有容错处理</li></ul><h1 id="1-2-RPC（远程过程调用）"><a href="#1-2-RPC（远程过程调用）" class="headerlink" title="1.2 RPC（远程过程调用）"></a>1.2 RPC（远程过程调用）</h1><p>分布式系统不关心网络如何传输，只关心网络的两个指标：<strong>时延(latency)、吞吐量(bandwidth)</strong></p><p>RPC的调用其他本地的函数一样，只是在本地的代码中，一部分的执行需要等待<strong>别的结点</strong>上的程序的执行结果返回。</p><p>RPC 会<strong>隐藏底层的通讯细节</strong>（不需要直接处理Socket通讯或Http通讯），在调用时会留下一个stub，就像其他本地的代码一样。</p><ul><li>通信流程<ul><li>首先寻址通讯，<strong>建立TCP连接</strong></li><li>当A服务器上的应用发起远程过程调用时，方法的<strong>参数</strong>需要通过底层的网络协议如TCP传递到B服务器，由于<strong>网络协议是基于二进制的</strong>，内存中的参数的值要序列化成二进制的形式，也就是<strong>序列化（Serialize）或编组（marshal）</strong>，通过寻址和传输将序列化的二进制发送给B服务器。</li><li>B服务器收到请求后，需要对参数进行<strong>反序列化</strong>（序列化的逆操作），<strong>恢复为内存中的表达方</strong>式，然后找到对应的方法（寻址的一部分）进行本地调用，然后得到返回值。</li><li>返回值还要发送回服务器A上的应用，也要经过序列化的方式发送，服务器A接到后，再反序列化，恢复为内存中的表达方式，<strong>交给A服务器上的应用</strong></li></ul>  <img src="1%20introduc%208b260/Untitled.png" alt="rpc">  rpc</li></ul><p><img src="1%20introduc%208b260/Untitled%201.png" alt="rpc2"></p><p>rpc2</p><p>如果RPC调用失败，则会重试不止一次。但如果一直错误，不能无限的重试，因此需要设置<strong>超时(timeout)</strong></p><p>RPC框架要做到最基本的3件事情：</p><ul><li><strong>服务端如何确定客户端要调用的函数</strong>；<br>在远程调用中，客户端和服务端分别<strong>维护一个【ID-&gt;函数】的对应表</strong>， ID在所有进程中都是唯一确定的。客户端在做远程过程调用时，附上这个ID，服务端通过查表，来确定客户端需要调用的函数，然后执行相应函数的代码。</li><li><strong>如何进行序列化和反序列化</strong>；<br>客户端和服务端交互时将参数或结果转化为字节流在网络中传输，那么数据转化为字节流的或者将字节流转换成能读取的<strong>固定格式</strong>时就需要进行序列化和反序列化，序列化和反序列化的<strong>速度</strong>也会影响远程调用的效率。</li><li><strong>如何进行网络传输</strong><br>多数RPC框架选择TCP作为传输协议，也有部分选择HTTP。如gRPC使用HTTP2。不同的协议各有利弊。TCP更加高效，而HTTP在实际应用中更加的灵活</li></ul><h2 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h2><p>representational state transfer <strong>表征状态转移</strong>（REST）</p><p>REST是一种架构风格，指的是一组架构约束条件和原则。满足这些约束条件和原则的应用程序或设计就是 RESTful。REST规范<strong>把所有内容都视为资源</strong>，网络上一切皆资源。</p><ul><li><strong>6个约束</strong>：<ol><li><strong>客户端—服务器</strong><br>服务端与客户端<strong>独立实现并独立开发</strong>，只要<strong>接口不改变</strong>即可。提高跨多个平台的用户接口的可移植性并提高可伸缩性。</li><li><strong>统一接口</strong><br>系统中的多个组件都依赖于统一接口，包含4个子约束：<ol><li><strong>资源的标识</strong><br>资源<strong>通过URL区分</strong>，当访问一个URL时，能够获取该资源或对它执行相应的操作。</li><li><strong>通过表述操作资源</strong><br>客户端请求资源时，可以指定期望的格式，服务器返回响应时，响应包含了指定格式的资源。访问同一个资源的不同格式无须修改资源的标识符，客户端也可以通过资源的表述对资源进行操作。</li><li><strong>自描述消息</strong><br>客户端和服务器之间传递的消息都应<strong>包含足够的信息</strong>（如<strong>资源表述的格式和内容长度，甚至相关的其他操作信息</strong>）。</li><li>超媒体作为应用程序状态的引擎（HATEOAS）<br>服务器返回的资源表述中包含与之相关的链接，这些链接能够对资源执行其他操作。</li></ol></li><li><strong>分层系统</strong><br>服务端和客户端不知道网络中介（代理或网关等）的存在，增强安全、负载均衡和响应缓存等。</li><li><strong>缓存</strong><br>客户端和网络中介都可以缓存服务器返回的响应，以便于减少数据获取延迟和服务器的请求次数，提高系统性能。</li><li><strong>无状态</strong><br>服务器不会记录或存储客户端的状态信息。从客户端到服务器的每个请求都必须包含理解请求所需的所有信息，并且不能利用服务器上任何存储的上下文。</li><li><strong>按需编码（可选）</strong><br>允许服务器临时向客户端返回可执行的程序代码用于客户端拓展和自定义功能，简化客户端。</li></ol></li></ul><p><img src="1%20introduc%208b260/Untitled%202.png" alt="Untitled"></p><h2 id="SOA（Service-Oriented-Architecture）"><a href="#SOA（Service-Oriented-Architecture）" class="headerlink" title="SOA（Service-Oriented Architecture）"></a><strong><strong>SOA（Service-Oriented Architecture）</strong></strong></h2><p>将一个大型软件分成多个服务（或多个结点），其间通过RPC来通信</p><p><strong>微服务是SOA架构的一种变体</strong></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;1-introduction-to-Distributed-Systems&quot;&gt;&lt;a href=&quot;#1-introduction-to-Distributed-Systems&quot; class=&quot;headerlink&quot; title=&quot;1. introduction to</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>C++ primer 读书笔记 chapter 14 重载运算与类型转换</title>
