@@ -1,0 +1,552 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://img1.baidu.com/it/u=4218313265,1883370397&amp;fm=26&amp;fmt=auto">
+  <link rel="icon" href="https://img1.baidu.com/it/u=4218313265,1883370397&amp;fm=26&amp;fmt=auto">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 6 raft算法伪代码注释">
+  <meta name="author" content="wuyifff">
+  <meta name="keywords" content="">
+  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 6 raft算法伪代码注释">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统:6.Consensus⭐⭐⭐">
+<meta property="og:url" content="https://wuyifff.github.io/2022/03/14/Distributed%20System/6%20consensu%20f1398/index.html">
+<meta property="og:site_name" content="wuyifff&#39;s blog">
+<meta property="og:description" content="DDIA作者Martin Kleppmann分布式系统 chapter 6 raft算法伪代码注释">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/dXZCUByl17fTK65.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/FcC67gHKAz5lMaE.png">
+<meta property="article:published_time" content="2022-03-14T15:02:00.000Z">
+<meta property="article:modified_time" content="2022-03-15T03:34:48.655Z">
+<meta property="article:author" content="wuyifff">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2022/03/15/dXZCUByl17fTK65.png">
+  
+  <title>分布式系统:6.Consensus⭐⭐⭐ - wuyifff&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wuyifff.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":" ","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="wuyifff's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>wuyifff&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://img0.baidu.com/it/u=336294190,1675821935&fm=26&fmt=auto') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="分布式系统:6.Consensus⭐⭐⭐">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      wuyifff
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-14 23:02" pubdate>
+        2022年3月14日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      25 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span>
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">分布式系统:6.Consensus⭐⭐⭐</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022年3月15日 中午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="6-consensus"><a href="#6-consensus" class="headerlink" title="6. consensus"></a>6. consensus</h1><h1 id="6-1-consensus"><a href="#6-1-consensus" class="headerlink" title="6.1 consensus"></a>6.1 consensus</h1><p>如果leader宕机了，需要重新选举一个新的leader</p>
+<p>共识问题：需要所有节点同意一个事情</p>
+<p>Paxos：基于一个值的共识</p>
+<p>Muti-Paxos：提供total order broadcast</p>
+<p>Raft,Zab：默认total order broadcast</p>
+<h2 id="Consensus-system-models"><a href="#Consensus-system-models" class="headerlink" title="Consensus system models"></a>Consensus system models</h2><p>Paxos，Raft假设一个部分同步，崩溃恢复的模型</p>
+<p>FLP result：不可能在完全异步的系统中构建共识算法</p>
+<p>因此必须使用时钟来计算超时，检测崩溃，超时时间影响系统的活性(liveness)</p>
+<h2 id="leader-election"><a href="#leader-election" class="headerlink" title="leader election"></a>leader election</h2><ul>
+<li>用时钟检测leader是否crash</li>
+<li>选举新leader</li>
+<li>防止同时有两个leader（脑裂）</li>
+<li>每次任期（term）最多只能选出一个leader</li>
+<li>一个节点在一次任期内只能选举一次</li>
+<li>需要法定人数(quorum)的节点来选举</li>
+</ul>
+<p>为了保证只有一个leader：在选出leader之后，发信息之前leader需要再确认一次</p>
+<h1 id="6-2-Raft（伪代码）"><a href="#6-2-Raft（伪代码）" class="headerlink" title="6.2 Raft（伪代码）"></a>6.2 Raft（伪代码）</h1><h2 id="raft中的状态机"><a href="#raft中的状态机" class="headerlink" title="raft中的状态机"></a>raft中的状态机</h2><p><img src="https://s2.loli.net/2022/03/15/dXZCUByl17fTK65.png" alt="Untitled"></p>
+<h2 id="1-9-初始化"><a href="#1-9-初始化" class="headerlink" title="1/9 初始化"></a>1/9 初始化</h2><p>初始化、崩溃恢复、开始选举</p>
+<p>log的存储如下：</p>
+<p><img src="https://s2.loli.net/2022/03/15/FcC67gHKAz5lMaE.png" alt="Untitled"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">on initialisation <span class="hljs-keyword">do</span><br>	currentTerm := <span class="hljs-number">0</span>; votedFor := null<br>	<span class="hljs-comment">//term在每次选举之后+1，</span><br>	log := &lt;&gt;; commitLength := <span class="hljs-number">0</span><br>	<span class="hljs-comment">//log是entry的序列，每一条entry包含我们要发送的信息和当前的term</span><br>	<span class="hljs-comment">//log末尾增加，并通过raft将其复制到所有节点，当log的条目被复制到法定人数则确认</span><br>	<span class="hljs-comment">//确认的log无法再更改，所有在commit length之前的log都是固定了的</span><br><span class="hljs-comment">//上面的变量存储在磁盘中，为了错误恢复</span><br><span class="hljs-comment">//每当有更新，必须先写入磁盘，再做其他的事情 </span><br>	currentRole := follower; currentLeader := null<br>	votesReceived := &#123;&#125;; sentLength := &lt;&gt;; ackedLength := &lt;&gt;<br>	<span class="hljs-comment">//这些变量可以在易失性存储器上，如RAM</span><br>end on <br><br>on recovery from crash <span class="hljs-keyword">do</span><br>	currentRole := follower; currentLeader := null<br>	votesReceived := &#123;&#125;; sentLength := hi; ackedLength := hi<br>	<span class="hljs-comment">//从崩溃中恢复，恢复上面易失的变量</span><br>end on<br><br>on node nodeId suspects leader has failed, <span class="hljs-keyword">or</span> on election timeout <span class="hljs-keyword">do</span><br>	<span class="hljs-comment">//当节点怀疑leader崩溃，或者到达任期之后</span><br>	currentTerm := currentTerm + <span class="hljs-number">1</span>; currentRole := candidate<br>	<span class="hljs-comment">//节点任期 + 1，成为候选人</span><br>	votedFor := nodeId; votesReceived := &#123;nodeId&#125;; lastTerm := <span class="hljs-number">0</span><br>	<span class="hljs-comment">//节点为自己投票</span><br>	<span class="hljs-keyword">if</span> log.length &gt; <span class="hljs-number">0</span><br>		then lastTerm := log[log.length − <span class="hljs-number">1</span>].term<br>	end <span class="hljs-keyword">if</span><br>	<span class="hljs-comment">//lastTerm变量设置为log中最后一条记录的任期</span><br>	msg := (VoteRequest, nodeId, currentTerm, log.length, lastTerm) <br>	<span class="hljs-comment">//msg类型为voteRequest，节点的ID，节点的任期，log的长度，lastTerm</span><br>	<span class="hljs-keyword">for</span> each node ∈ nodes: <br>		send msg to node<br>	<span class="hljs-comment">//发送给每一个节点 </span><br>	start election timer<br>	<span class="hljs-comment">//开启计时器，如果没有收到足够的选票，重启选举</span><br>end on<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="2-9-选举新的leader"><a href="#2-9-选举新的leader" class="headerlink" title="2/9 选举新的leader"></a>2/9 选举新的leader</h2><p>主要在于确认候选人是否logOK和termOK</p>
+<p>$$<br>logOK := (cLogTerm &gt; myLogTerm)\vee\(cLogTerm = myLogTerm \wedge cLogLength &gt;= log.length)\<br>$$</p>
+<p>$$<br>termOK := (cTerm &gt; currentTerm)\vee\(cTerm = currentTerm\wedge votedFor in {cId,null})<br>$$</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">on <span class="hljs-title">receiving</span> <span class="hljs-params">(VoteRequest, cId, cTerm, cLogLength, cLogTerm)</span> at node nodeId <span class="hljs-keyword">do</span></span><br><span class="hljs-function">	<span class="hljs-comment">//收到的是voteRequest,C代表的是candidate候选人</span></span><br><span class="hljs-function">	<span class="hljs-comment">//cLogTrem对应发送时的lastTerm</span></span><br><span class="hljs-function">	myLogTerm :=</span> log[log.length - <span class="hljs-number">1</span>].term<br>	logOK := (cLogTerm &gt; myLogTerm)||(cLogTerm = myLogTerm &amp;&amp; cLogLength &gt;= log.length)<br>	<span class="hljs-comment">//首先确认候选人的log是否OK，如果候选人的log中最后的任期大于自身log中最后的任期，OK</span><br>	<span class="hljs-comment">//或者候选人log中最后的任期等于节点自身log中最后的任期，并且候选人的log长度小于自身log长度，OK </span><br>	termOK := (cTerm &gt; currentTerm)||(cTerm = currentTerm &amp;&amp; votedFor ∈ &#123;cId,null&#125;)<br>	<span class="hljs-comment">//确认候选人的任期是否OK，如候选人任期更大，OK</span><br>	<span class="hljs-comment">//或者候选人任期与节点自身任期相等，并且（节点已经投票过给候选人或节点还未投票），OK</span><br>	<span class="hljs-keyword">if</span> logOK &amp;&amp; termOK then<br>		<span class="hljs-comment">//都OK则为候选人投票</span><br>		currentTerm := cTerm<br>		currentRole := follower<br>		votedFor := cId	<br>		<span class="hljs-built_in">send</span> (VoteResponse, nodeId, currentTerm,<span class="hljs-literal">true</span>) to node cId<br>		<span class="hljs-comment">//修改任期和候选人一致，修改当前的角色，记下投给了谁，并发送投票</span><br>	<span class="hljs-keyword">else</span><br>		<span class="hljs-built_in">send</span> (VoteResponse, nodeId, currentTerm, <span class="hljs-literal">false</span>) to node cId<br>		<span class="hljs-comment">//不符合投票要求，投反对票</span><br>	end <span class="hljs-keyword">if</span><br>end on<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="3-9-收集选票"><a href="#3-9-收集选票" class="headerlink" title="3/9 收集选票"></a>3/9 收集选票</h2><p>候选人得到选票后：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">on <span class="hljs-title">receiving</span> <span class="hljs-params">(VoteResponse, voterId, term, granted)</span> at nodeId <span class="hljs-keyword">do</span></span><br><span class="hljs-function">	<span class="hljs-comment">//如果自己不是候选人则什么都不做</span></span><br><span class="hljs-function">	<span class="hljs-keyword">if</span> currentRole </span>= candidate &amp;&amp; term = currentTerm &amp;&amp; granted then<br>	<span class="hljs-comment">//确认选票是投给自己这一次选举，且是支持票，如果投的票term小于currentTrem直接忽略</span><br>		votesReceived := votesReceived ∪ &#123;voterId&#125;<br>		<span class="hljs-comment">//加入收到的选票集合，注意是集合并操作，故具有幂等性</span><br>		<span class="hljs-keyword">if</span> |votesReceived| ≥ <span class="hljs-built_in">d</span>(|nodes| + <span class="hljs-number">1</span>)/<span class="hljs-number">2</span>e then <br>			<span class="hljs-comment">//每次都判断是否得到了法定人数的选票</span><br>			currentRole := leader; currentLeader := nodeId<br>			cancel election timer<br>			<span class="hljs-comment">//修改自身为leader，停止计时器</span><br>			<span class="hljs-keyword">for</span> each follower ∈ nodes \ &#123;nodeId&#125; <span class="hljs-keyword">do</span><br>				sentLength[follower ] := log.length<br>				ackedLength[follower ] := <span class="hljs-number">0</span><br>				<span class="hljs-comment">//sL以及aL将每一个节点Id映射到一个整数上，分别代表多少msg被发送给了节点，</span><br>				<span class="hljs-comment">//以及节点到现在确认了多少msg，这些都是假设有可能会出错</span><br>				<span class="hljs-built_in">ReplicateLog</span>(nodeId, follower)<br>				<span class="hljs-comment">//告诉所有节点自己现在是leader</span><br>			end <span class="hljs-keyword">for</span><br>		end <span class="hljs-keyword">if</span><br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> term &gt; currentTerm then<br>	<span class="hljs-comment">//如果得到的选票的任期大于候选人自己的任期，让出选举权，变成follower</span><br>		currentTerm := term<br>		currentRole := follower<br>		votedFor := null<br>		cancel election timer<br>	end <span class="hljs-keyword">if</span><br>end on<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="4-9-广播消息"><a href="#4-9-广播消息" class="headerlink" title="4/9 广播消息"></a>4/9 广播消息</h2><p>分为得到消息广播以及定期广播 </p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">on request to broadcast msg at node nodeId <span class="hljs-keyword">do</span><br>	<span class="hljs-comment">//leader广播的操作，首先判断是不是leader</span><br>	<span class="hljs-keyword">if</span> currentRole = leader then<br>		append the <span class="hljs-built_in">record</span> (msg : msg, term : currentTerm) to log<br>		<span class="hljs-comment">//将msg以及当前任期加入log</span><br>		ackedLength[nodeId] := log.length<br>		<span class="hljs-comment">//leader自己确认log</span><br>		<span class="hljs-keyword">for</span> each follower ∈ nodes \ &#123;nodeId&#125; <span class="hljs-keyword">do</span><br>		<span class="hljs-comment">//出了leader的每个节点</span><br>			<span class="hljs-built_in">ReplicateLog</span>(nodeId, follower )<br>			<span class="hljs-comment">//复制新的entry到follower</span><br>		end <span class="hljs-keyword">for</span><br>	<span class="hljs-keyword">else</span><br>	<span class="hljs-comment">//如果不是leader，将消息通过FIFO链路转发到leader</span><br>		forward the request to currentLeader via a FIFO link<br>	end <span class="hljs-keyword">if</span><br>end on<br><br>periodically at node nodeId <span class="hljs-keyword">do</span><br><span class="hljs-comment">//leader每隔一段时间调用复制log的函数，复制log到每个follower</span><br><span class="hljs-comment">//1.作为心跳告诉follower自己还活着</span><br><span class="hljs-comment">//2.防止由于网络原因丢失消息，故定期重传</span><br>	<span class="hljs-keyword">if</span> currentRole = leader then<br>		<span class="hljs-keyword">for</span> each follower ∈ nodes \ &#123;nodeId&#125; <span class="hljs-keyword">do</span><br>			<span class="hljs-built_in">ReplicateLog</span>(nodeId, follower )<br>		end <span class="hljs-keyword">for</span><br>	end <span class="hljs-keyword">if</span><br>end <span class="hljs-keyword">do</span><br></code></pre></div></td></tr></table></figure>
+
+<h2 id="5-9-函数ReplicateLog"><a href="#5-9-函数ReplicateLog" class="headerlink" title="5/9 函数ReplicateLog"></a>5/9 函数ReplicateLog</h2><p>每当有新msg到达leader，或者定期调用</p>
+<p>如果没有新消息，entries是空列表</p>
+<p>logRequest消息和空entries作为心跳，让follower知道leader还活着</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">function <span class="hljs-title">ReplicateLog</span><span class="hljs-params">(leaderId, followerId)</span></span><br><span class="hljs-function">	prefixLen :=</span> sentLength[followerId]<br>	<span class="hljs-comment">//得到现在已经发送给这个follower的log长度</span><br>	suffix := &lt;log[prefixLen], log[prefixLen + <span class="hljs-number">1</span>], . . . ,log[log.length − <span class="hljs-number">1</span>]&gt;<br>	<span class="hljs-comment">//得到所有现在还没有发送给follower的log</span><br>	prefixTerm := <span class="hljs-number">0</span> <br>	<span class="hljs-keyword">if</span> prefixLen &gt; <span class="hljs-number">0</span> then<br>		prefixTerm := log[prefixLen − <span class="hljs-number">1</span>].term<br>	<span class="hljs-comment">//发送的msg附带了之前发送给follower节点中最后一个entry的任期信息，用于一致性检查</span><br>	end <span class="hljs-keyword">if</span><br>	<span class="hljs-built_in">send</span> (LogRequest, leaderId, currentTerm, prefixLen,<br>				prefixTerm, commitLength, suffix ) to followerId<br>end function<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="6-9-follower收到msg"><a href="#6-9-follower收到msg" class="headerlink" title="6/9 follower收到msg"></a>6/9 follower收到msg</h2><figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">on <span class="hljs-title">receiving</span> <span class="hljs-params">(LogRequest, leaderId, term, prefixLen, prefixTerm,</span></span><br><span class="hljs-params"><span class="hljs-function">				leaderCommit, suffix )</span> at node nodeId <span class="hljs-keyword">do</span></span><br><span class="hljs-function">	<span class="hljs-comment">//suffix为leader发来的log，leadercommit就是leader有的commit长度</span></span><br><span class="hljs-function">	<span class="hljs-keyword">if</span> term &gt; currentTerm then</span><br><span class="hljs-function">		currentTerm :=</span> term; votedFor := null<br>		cancel election timer<br>		currentRole := follower; currentLeader := leaderId<br>		<span class="hljs-comment">//如果收到的msg的term大于当前的任期，直接覆盖，忘记自己的投票，关闭选举计时器</span><br>	end <span class="hljs-keyword">if</span><br>	<span class="hljs-comment">//如果term等于当前任期，认为自己是follower（有人已经选举成功了），并且认为发送者为leader</span><br>	logOk := (log.length ≥ prefixLen) ∧<br>			(prefixLen = <span class="hljs-number">0</span> ∨ log[prefixLen − <span class="hljs-number">1</span>].term = prefixTerm)<br>	<span class="hljs-comment">//follower可能已经下线一段时间，跟最新的log有gap，即自身的log和leader认为已经发送给follower的log有gap</span><br>	<span class="hljs-comment">//logOK则可以向leader回应ack，代表本地log与leader前缀部分相同，不OK需要同步log</span><br>	<span class="hljs-comment">//本地比leader记录的要长舍弃即可</span><br>	<span class="hljs-comment">//如果节点本地的log长度小于leader认为的prefix，说明丢失了一些msg，leader发来的消息不够，需要额外请求那部分</span><br>	<span class="hljs-comment">//检查完log再检查term，如果prefix为0则不需要检查log（第一次）</span><br>	<span class="hljs-comment">//△△△</span><br>	<span class="hljs-comment">//否则需要检查自己前缀log中的最后一个任期和leader发送过他的相应entry是否term相同（5中提到的一致性检查）</span><br>	<span class="hljs-keyword">if</span> term = currentTerm ∧ logOk then<br>		<span class="hljs-built_in">AppendEntries</span>(prefixLen, leaderCommit, suffix )<br>		ack := prefixLen + suffix .length<br>		<span class="hljs-comment">//在节点自己的log中加入entry，并且计算已经确认的log长度</span><br>		<span class="hljs-built_in">send</span> (LogResponse, nodeId, currentTerm, ack,<span class="hljs-literal">true</span>) to leaderId<br>		<span class="hljs-comment">//ack log给leader</span><br>	<span class="hljs-keyword">else</span><br>		<span class="hljs-built_in">send</span> (LogResponse, nodeId, currentTerm, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>) to leaderId<br>		<span class="hljs-comment">//给出nak</span><br>	end <span class="hljs-keyword">if</span><br>end on<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="7-9-更新follower的log"><a href="#7-9-更新follower的log" class="headerlink" title="7/9 更新follower的log"></a>7/9 更新follower的log</h2><p>follower节点更新自己的log（follower’s point of view）</p>
+<p>注意区分leader发送的prefixLen不等于leaderCommit</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">function <span class="hljs-title">AppendEntries</span><span class="hljs-params">(prefixLen, leaderCommit, suffix )</span></span><br><span class="hljs-function"><span class="hljs-comment">//leadercommit为leader的commit长度</span></span><br><span class="hljs-function">	<span class="hljs-keyword">if</span> suffix .length &gt; 0 &amp;&amp; log.length &gt; prefixLen then</span><br><span class="hljs-function">	<span class="hljs-comment">//如果leader发过来的entries长度大于0，并且节点log的长度大于leader发来的leader的发送长度</span></span><br><span class="hljs-function">	<span class="hljs-comment">//如果term不同意味着需要舍去本地多余的记录（可能来自老leader未被确认的部分）</span></span><br><span class="hljs-function">	<span class="hljs-comment">//△△△term相同意味着可能node的ack丢失了</span></span><br><span class="hljs-function">		index :=</span> <span class="hljs-built_in">min</span>(log.length, prefixLen + suffix .length) − <span class="hljs-number">1</span><br>		<span class="hljs-comment">//得到最小需要更新的index</span><br>		<span class="hljs-keyword">if</span> log[index ].term != suffix [index − prefixLen].term then<br>			log := &lt;log[<span class="hljs-number">0</span>], log[<span class="hljs-number">1</span>], . . . , log[prefixLen − <span class="hljs-number">1</span>]&gt;<br>		end <span class="hljs-keyword">if</span><br>		<span class="hljs-comment">//比较能得到的本地log最后的term和leader发过来的term</span><br>		<span class="hljs-comment">//如果不一致则丢弃本地的，用leader发来的覆盖</span><br>	end <span class="hljs-keyword">if</span><br>	<span class="hljs-comment">//下面进行append操作</span><br>	<span class="hljs-keyword">if</span> prefixLen + suffix .length &gt; log.length then<br>		<span class="hljs-keyword">for</span> i := log.length − prefixLen to suffix .length − <span class="hljs-number">1</span> <span class="hljs-keyword">do</span><br>			append suffix [i] to log<br>		end <span class="hljs-keyword">for</span><br>	end <span class="hljs-keyword">if</span><br>	<span class="hljs-comment">//下面进行commit操作</span><br>	<span class="hljs-keyword">if</span> leaderCommit &gt; commitLength then<br>		<span class="hljs-keyword">for</span> i := commitLength to leaderCommit − <span class="hljs-number">1</span> <span class="hljs-keyword">do</span><br>			deliver log[i].msg to the application<br>			<span class="hljs-comment">//将已经提交的log发送给上层应用</span><br>		end <span class="hljs-keyword">for</span><br>		commitLength := leaderCommit<br>	end <span class="hljs-keyword">if</span><br>end function <br></code></pre></div></td></tr></table></figure>
+
+<h2 id="8-9-leader收到ack"><a href="#8-9-leader收到ack" class="headerlink" title="8/9 leader收到ack"></a>8/9 leader收到ack</h2><p>leader’s point of view</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">on <span class="hljs-title">receiving</span> <span class="hljs-params">(LogResponse, follower , term, ack, success)</span> at nodeId <span class="hljs-keyword">do</span></span><br><span class="hljs-function">	<span class="hljs-keyword">if</span> term </span>= currentTerm ∧ currentRole = leader then<br>	<span class="hljs-comment">//term相等且自己是leader</span><br>		<span class="hljs-keyword">if</span> success = <span class="hljs-literal">true</span> ∧ ack ≥ ackedLength[follower ] then<br>			sentLength[follower] := ack<br>			ackedLength[follower] := ack<br>			<span class="hljs-comment">//一切正常，两个都置为ack</span><br>			<span class="hljs-built_in">CommitLogEntries</span>()<br>		<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> sentLength[follower] &gt; <span class="hljs-number">0</span> then<br>		<span class="hljs-comment">//follower出现了gap，需要fill</span><br>			sentLength[follower] := sentLength[follower ] − <span class="hljs-number">1</span><br>			<span class="hljs-built_in">ReplicateLog</span>(nodeId, follower )<br>			<span class="hljs-comment">//回退一个entry，suffix+1长度之后重试</span><br>		end <span class="hljs-keyword">if</span><br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> term &gt; currentTerm then<br>	<span class="hljs-comment">//出现了更大的term，自己变成了follower</span><br>		currentTerm := term<br>		currentRole := follower<br>		votedFor := null<br>		cancel election timer<br>		<span class="hljs-comment">//变成follower的操作</span><br>	end <span class="hljs-keyword">if</span><br>end on<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="9-9-leader提交log-entries"><a href="#9-9-leader提交log-entries" class="headerlink" title="9/9 leader提交log entries"></a>9/9 leader提交log entries</h2><p>任何被法定人数节点确认的log entries需要被leader提交</p>
+<p>每当log entry被提交，msg被送给上层应用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">function CommitLogEntries<br>	<span class="hljs-keyword">while</span> commitLength &lt; log.length <span class="hljs-keyword">do</span><br>		acks := <span class="hljs-number">0</span><br>		<span class="hljs-keyword">for</span> each node ∈ &#123;nodes&#125; <span class="hljs-keyword">do</span><br>			<span class="hljs-keyword">if</span> ackedLength[node] &gt; commitLength then<br>				acks := acks + <span class="hljs-number">1</span><br>			end <span class="hljs-keyword">if</span><br>		end <span class="hljs-keyword">for</span><br>		<span class="hljs-keyword">if</span> acks ≥ [(|nodes| + <span class="hljs-number">1</span>)/<span class="hljs-number">2</span>] then<br>			deliver log[commitLength].msg to the application<br>			<span class="hljs-comment">//被提交的msg交给上层应用 </span><br>			commitLength := commitLength + <span class="hljs-number">1</span><br>			<span class="hljs-comment">//commitLength同样也告诉follower节点哪些被commit，可以被提交到上层应用</span><br>		<span class="hljs-keyword">else</span><br>			<span class="hljs-keyword">break</span><br>		end <span class="hljs-keyword">if</span><br>	end <span class="hljs-keyword">while</span><br>end function<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>每个节点的election timeout随机设定</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://raft.github.io/">Raft Consensus Algorithm</a></p>
+<p><a target="_blank" rel="noopener" href="http://thesecretlivesofdata.com/raft/">Raft (thesecretlivesofdata.com)</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Distributed-Systems/">Distributed Systems</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/13/Distributed%20System/5%20Replicat%20f89c4/">
+                        <span class="hidden-mobile">分布式系统:5.Replication</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

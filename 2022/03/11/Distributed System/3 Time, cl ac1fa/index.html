@@ -13,26 +13,25 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 1">
+  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 3">
   <meta name="author" content="wuyifff">
   <meta name="keywords" content="">
-  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 1">
+  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 3">
 <meta property="og:type" content="article">
-<meta property="og:title" content="分布式系统:1.introduction to Distributed Systems">
-<meta property="og:url" content="https://wuyifff.github.io/2022/03/09/Distributed%20System/ch1/index.html">
+<meta property="og:title" content="分布式系统:3.Time, clocks, and ordering of events">
+<meta property="og:url" content="https://wuyifff.github.io/2022/03/11/Distributed%20System/3%20Time,%20cl%20ac1fa/index.html">
 <meta property="og:site_name" content="wuyifff&#39;s blog">
-<meta property="og:description" content="DDIA作者Martin Kleppmann分布式系统 chapter 1">
+<meta property="og:description" content="DDIA作者Martin Kleppmann分布式系统 chapter 3">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/03/09/wY8tPdl5TFQUy7f.png">
-<meta property="og:image" content="https://s2.loli.net/2022/03/09/5YcbVglU1XSipam.png">
-<meta property="og:image" content="https://s2.loli.net/2022/03/09/2XojBslAMrReQ9U.png">
-<meta property="article:published_time" content="2022-03-09T07:02:00.000Z">
-<meta property="article:modified_time" content="2022-03-15T03:32:00.464Z">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/syC5WFMHoBwaOLZ.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/S2ieoYxdORujJG6.png">
+<meta property="article:published_time" content="2022-03-11T09:02:00.000Z">
+<meta property="article:modified_time" content="2022-03-15T03:31:45.141Z">
 <meta property="article:author" content="wuyifff">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/03/09/wY8tPdl5TFQUy7f.png">
+<meta name="twitter:image" content="https://s2.loli.net/2022/03/15/syC5WFMHoBwaOLZ.png">
   
-  <title>分布式系统:1.introduction to Distributed Systems - wuyifff&#39;s blog</title>
+  <title>分布式系统:3.Time, clocks, and ordering of events - wuyifff&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -167,7 +166,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="分布式系统:1.introduction to Distributed Systems">
+            <span class="h2" id="subtitle" title="分布式系统:3.Time, clocks, and ordering of events">
               
             </span>
 
@@ -182,8 +181,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-03-09 15:02" pubdate>
-        2022年3月9日 下午
+      <time datetime="2022-03-11 17:02" pubdate>
+        2022年3月11日 下午
       </time>
     </span>
   
@@ -193,7 +192,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      796 字
     </span>
   
 
@@ -202,7 +201,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6 分钟
+      2 分钟
     </span>
   
 
@@ -239,7 +238,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">分布式系统:1.introduction to Distributed Systems</h1>
+            <h1 style="display: none">分布式系统:3.Time, clocks, and ordering of events</h1>
             
               <p class="note note-info">
                 
@@ -248,67 +247,36 @@
               </p>
             
             <div class="markdown-body">
-              <h1 id="1-introduction-to-Distributed-Systems"><a href="#1-introduction-to-Distributed-Systems" class="headerlink" title="1. introduction to Distributed Systems"></a>1. introduction to Distributed Systems</h1><h1 id="1-1-About-Distributed-Systems"><a href="#1-1-About-Distributed-Systems" class="headerlink" title="1.1 About Distributed Systems"></a>1.1 About <strong><strong>Distributed Systems</strong></strong></h1><p>单机的并发<strong>（concurrency）</strong>又称为是共享内存(shared-memory)的并发，通过指针或变量可以很方便的进行</p>
-<p>而非单机场景下，不同的电脑可以并行执行程序，他们只能通过网络通信，构成分布式系统</p>
-<p>分布式系统中每一个电脑被称为<strong>结点(node)，结点可以是任何互相连接的计算设备</strong></p>
-<h3 id="为何构建分布式系统？（优点）"><a href="#为何构建分布式系统？（优点）" class="headerlink" title="为何构建分布式系统？（优点）"></a>为何构建分布式系统？（优点）</h3><ol>
-<li>一些应用是天然(intrinsically)的分布式系统，例如接打电话</li>
-<li>分布式系统比单机更加<strong>可靠</strong></li>
-<li>分布式系统有更好的<strong>性能</strong>，更快的响应速度（地理相邻）</li>
-<li>一些<strong>数据太大</strong>而不能放在一个机器上</li>
-</ol>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ol>
-<li><strong>网络错误</strong>导致结点无法相互通信</li>
-<li>结点可能会崩溃(crash)、运行缓慢</li>
-</ol>
-<p>因此：</p>
+              <h1 id="3-Time-clocks-and-ordering-of-events"><a href="#3-Time-clocks-and-ordering-of-events" class="headerlink" title="3 Time, clocks, and ordering of events"></a>3 Time, clocks, and ordering of events</h1><p>为什么时间重要？</p>
+<p>在debug的时候，时间戳很重要，这允许我们重建在不同节点上运行的环境。</p>
+<p>分布式系统需要时间戳：</p>
 <ul>
-<li>我们需要有方法检测crash</li>
-<li>分布式系统需要有容错处理</li>
+<li>超时检测、重试的时间限制</li>
+<li>性能衡量</li>
+<li>决定几个结点之间时间发生的顺序</li>
+<li>有些数据具有时间有效性（例如cache）</li>
 </ul>
-<h1 id="1-2-RPC（远程过程调用）"><a href="#1-2-RPC（远程过程调用）" class="headerlink" title="1.2 RPC（远程过程调用）"></a>1.2 RPC（远程过程调用）</h1><p>分布式系统不关心网络如何传输，只关心网络的两个指标：<strong>时延(latency)、吞吐量(bandwidth)</strong></p>
-<p>RPC的调用其他本地的函数一样，只是在本地的代码中，一部分的执行需要等待<strong>别的结点</strong>上的程序的执行结果返回。</p>
-<p>RPC 会<strong>隐藏底层的通讯细节</strong>（不需要直接处理Socket通讯或Http通讯），在调用时会留下一个stub，就像其他本地的代码一样。</p>
+<p>两种时钟：</p>
 <ul>
-<li>通信流程<ul>
-<li>首先寻址通讯，<strong>建立TCP连接</strong></li>
-<li>当A服务器上的应用发起远程过程调用时，方法的<strong>参数</strong>需要通过底层的网络协议如TCP传递到B服务器，由于<strong>网络协议是基于二进制的</strong>，内存中的参数的值要序列化成二进制的形式，也就是<strong>序列化（Serialize）或编组（marshal）</strong>，通过寻址和传输将序列化的二进制发送给B服务器。</li>
-<li>B服务器收到请求后，需要对参数进行<strong>反序列化</strong>（序列化的逆操作），<strong>恢复为内存中的表达方</strong>式，然后找到对应的方法（寻址的一部分）进行本地调用，然后得到返回值。</li>
-<li>返回值还要发送回服务器A上的应用，也要经过序列化的方式发送，服务器A接到后，再反序列化，恢复为内存中的表达方式，<strong>交给A服务器上的应用</strong></li>
+<li>物理时钟</li>
+<li>逻辑时钟</li>
 </ul>
-  <img src="https://s2.loli.net/2022/03/09/wY8tPdl5TFQUy7f.png" alt="rpc">  rpc</li>
-</ul>
-<p><img src="https://s2.loli.net/2022/03/09/5YcbVglU1XSipam.png" alt="rpc2"></p>
-<p>rpc2</p>
-<p>如果RPC调用失败，则会重试不止一次。但如果一直错误，不能无限的重试，因此需要设置<strong>超时(timeout)</strong></p>
-<p>RPC框架要做到最基本的3件事情：</p>
+<h1 id="3-1-物理时钟"><a href="#3-1-物理时钟" class="headerlink" title="3.1 物理时钟"></a>3.1 物理时钟</h1><p>略</p>
+<h1 id="3-2-时钟同步和单调钟"><a href="#3-2-时钟同步和单调钟" class="headerlink" title="3.2 时钟同步和单调钟"></a>3.2 时钟同步和单调钟</h1><p>由于时钟偏移(clock skew)，需要时钟同步</p>
+<h2 id="NTP"><a href="#NTP" class="headerlink" title="NTP"></a>NTP</h2><p>Network Time Protocol 网络时间协议</p>
+<p>用于通过数据包交换的可变延迟数据网络在计算机系统之间进行时钟同步</p>
+<p><img src="https://s2.loli.net/2022/03/15/syC5WFMHoBwaOLZ.png" alt="Untitled"></p>
 <ul>
-<li><strong>服务端如何确定客户端要调用的函数</strong>；<br>在远程调用中，客户端和服务端分别<strong>维护一个【ID-&gt;函数】的对应表</strong>， ID在所有进程中都是唯一确定的。客户端在做远程过程调用时，附上这个ID，服务端通过查表，来确定客户端需要调用的函数，然后执行相应函数的代码。</li>
-<li><strong>如何进行序列化和反序列化</strong>；<br>客户端和服务端交互时将参数或结果转化为字节流在网络中传输，那么数据转化为字节流的或者将字节流转换成能读取的<strong>固定格式</strong>时就需要进行序列化和反序列化，序列化和反序列化的<strong>速度</strong>也会影响远程调用的效率。</li>
-<li><strong>如何进行网络传输</strong><br>多数RPC框架选择TCP作为传输协议，也有部分选择HTTP。如gRPC使用HTTP2。不同的协议各有利弊。TCP更加高效，而HTTP在实际应用中更加的灵活</li>
+<li>NTP协议解释  当客户端想要同步服务端的时间时，客户端会构造一个NTP协议包发送到NTP服务端，客户端会记下此时发送的时间t1，经过一段网络延时传输后，服务器在t2时刻收到数据包，经过一段时间处理后在t3时刻向客户端返回数据包，再经过一段网络延时传输后客户端在t4时刻收到NTP服务器数据包。  <strong>定义网络往返的延迟为$\delta$，客户端和服务器的时间偏差为$\theta$,则有：</strong>  $$<br>  \delta = (t_4-t_1)-(t_3-t_2)\\theta =t_3+\frac{\delta}{2}-t_4=\frac{(t_2-t_1)+(t_3-t_4)}{2}<br>  $$</li>
+<li>NTP<strong><strong>同步方式slew step的区别</strong></strong>  <img src="https://s2.loli.net/2022/03/15/S2ieoYxdORujJG6.png" alt="Untitled">  ntp在没有开启slew方式时，会一直使用step的方式，分步调整偏差。在开启了slew方式时，在600s内的偏差会使用slew方式以0.5ms/s的速度缓慢平滑的进行微调，整个过程&lt;=14天消除偏差，如果此时偏差查过了600的话会继续使用step的方式分步分阶段调整偏差。</li>
 </ul>
-<h2 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h2><p>representational state transfer <strong>表征状态转移</strong>（REST）</p>
-<p>REST是一种架构风格，指的是一组架构约束条件和原则。满足这些约束条件和原则的应用程序或设计就是 RESTful。REST规范<strong>把所有内容都视为资源</strong>，网络上一切皆资源。</p>
+<h1 id="3-3-因果律-Causality"><a href="#3-3-因果律-Causality" class="headerlink" title="3.3 因果律 Causality"></a>3.3 因果律 Causality</h1><p>我们认为a的发生先于b当且仅当：</p>
 <ul>
-<li><strong>6个约束</strong>：<ol>
-<li><strong>客户端—服务器</strong><br>服务端与客户端<strong>独立实现并独立开发</strong>，只要<strong>接口不改变</strong>即可。提高跨多个平台的用户接口的可移植性并提高可伸缩性。</li>
-<li><strong>统一接口</strong><br>系统中的多个组件都依赖于统一接口，包含4个子约束：<ol>
-<li><strong>资源的标识</strong><br>资源<strong>通过URL区分</strong>，当访问一个URL时，能够获取该资源或对它执行相应的操作。</li>
-<li><strong>通过表述操作资源</strong><br>客户端请求资源时，可以指定期望的格式，服务器返回响应时，响应包含了指定格式的资源。访问同一个资源的不同格式无须修改资源的标识符，客户端也可以通过资源的表述对资源进行操作。</li>
-<li><strong>自描述消息</strong><br>客户端和服务器之间传递的消息都应<strong>包含足够的信息</strong>（如<strong>资源表述的格式和内容长度，甚至相关的其他操作信息</strong>）。</li>
-<li>超媒体作为应用程序状态的引擎（HATEOAS）<br>服务器返回的资源表述中包含与之相关的链接，这些链接能够对资源执行其他操作。</li>
-</ol>
-</li>
-<li><strong>分层系统</strong><br>服务端和客户端不知道网络中介（代理或网关等）的存在，增强安全、负载均衡和响应缓存等。</li>
-<li><strong>缓存</strong><br>客户端和网络中介都可以缓存服务器返回的响应，以便于减少数据获取延迟和服务器的请求次数，提高系统性能。</li>
-<li><strong>无状态</strong><br>服务器不会记录或存储客户端的状态信息。从客户端到服务器的每个请求都必须包含理解请求所需的所有信息，并且不能利用服务器上任何存储的上下文。</li>
-<li><strong>按需编码（可选）</strong><br>允许服务器临时向客户端返回可执行的程序代码用于客户端拓展和自定义功能，简化客户端。</li>
-</ol>
-</li>
+<li>a和b发生在同一个节点上，a比b在本地先执行</li>
+<li>时间a发送信号m，事件b接受了信号m才发生</li>
+<li>存在c，可以认为a先于c，c先于b</li>
 </ul>
-<p><img src="https://s2.loli.net/2022/03/09/2XojBslAMrReQ9U.png" alt="Untitled"></p>
-<h2 id="SOA（Service-Oriented-Architecture）"><a href="#SOA（Service-Oriented-Architecture）" class="headerlink" title="SOA（Service-Oriented Architecture）"></a><strong><strong>SOA（Service-Oriented Architecture）</strong></strong></h2><p>将一个大型软件分成多个服务（或多个结点），其间通过RPC来通信</p>
-<p><strong>微服务是SOA架构的一种变体</strong></p>
+<p>否则称a和b无关（平行）</p>
 
             </div>
             <hr>
@@ -336,9 +304,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/03/10/Distributed%20System/2%20Models%20o%203cfdc/">
+                      <a href="/2022/03/12/Distributed%20System/4%20Broadcas%204e6cf/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">分布式系统:2.Models of distributed systems</span>
+                        <span class="hidden-mobile">分布式系统:4.Broadcast protocols and logical time⭐</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -346,8 +314,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/11/02/c++/14.%E9%87%8D%E8%BD%BD%E8%BF%90%E7%AE%97%E4%B8%8E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">
-                        <span class="hidden-mobile">C++ primer 读书笔记 chapter 14 重载运算与类型转换</span>
+                      <a href="/2022/03/10/Distributed%20System/2%20Models%20o%203cfdc/">
+                        <span class="hidden-mobile">分布式系统:2.Models of distributed systems</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

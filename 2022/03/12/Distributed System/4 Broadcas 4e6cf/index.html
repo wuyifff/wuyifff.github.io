@@ -1,0 +1,615 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://img1.baidu.com/it/u=4218313265,1883370397&amp;fm=26&amp;fmt=auto">
+  <link rel="icon" href="https://img1.baidu.com/it/u=4218313265,1883370397&amp;fm=26&amp;fmt=auto">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="DDIA作者Martin Kleppmann 分布式系统 chapter 4">
+  <meta name="author" content="wuyifff">
+  <meta name="keywords" content="">
+  <meta name="description" content="DDIA作者Martin Kleppmann 分布式系统 chapter 4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统:4.Broadcast protocols and logical time⭐">
+<meta property="og:url" content="https://wuyifff.github.io/2022/03/12/Distributed%20System/4%20Broadcas%204e6cf/index.html">
+<meta property="og:site_name" content="wuyifff&#39;s blog">
+<meta property="og:description" content="DDIA作者Martin Kleppmann 分布式系统 chapter 4">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/TpWqSJfhwKd2ueN.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/xD8bEWAwJNV4Oag.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/PDOv3Wio6S8b2fQ.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/Dso6IkTc5PVRmSM.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/ujp8RQav9lSVOW6.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/23fRWIeKOXrsql9.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/VYU9W65EJtkeio3.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/e97iv1GgMpkqd4D.png">
+<meta property="article:published_time" content="2022-03-12T07:02:00.000Z">
+<meta property="article:modified_time" content="2022-03-15T03:33:04.826Z">
+<meta property="article:author" content="wuyifff">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2022/03/15/TpWqSJfhwKd2ueN.png">
+  
+  <title>分布式系统:4.Broadcast protocols and logical time⭐ - wuyifff&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wuyifff.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":" ","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="wuyifff's blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>wuyifff&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://img0.baidu.com/it/u=336294190,1675821935&fm=26&fmt=auto') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="分布式系统:4.Broadcast protocols and logical time⭐">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      wuyifff
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-12 15:02" pubdate>
+        2022年3月12日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span>
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">分布式系统:4.Broadcast protocols and logical time⭐</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2022年3月15日 中午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="4-Broadcast-protocols-and-logical-time"><a href="#4-Broadcast-protocols-and-logical-time" class="headerlink" title="4. Broadcast protocols and logical time"></a>4. Broadcast protocols and logical time</h1><p>问题：分布式系统中如何判断事件发生的先后？为什么时间戳不行？</p>
+<p>在分布式系统中，不同的机器的时间可能不一样，这样导致这种方法会产生误差。也许你会说让机器定期进行 NTP 时间同步，但是在一个集群中，不同机器内部时间计算也会产生误差，可能有些机器时间前进的快点，有些机器会慢点，这种现象也叫 <em>Clock Drift（时钟漂移）。</em></p>
+<h1 id="4-1-逻辑时间"><a href="#4-1-逻辑时间" class="headerlink" title="4.1 逻辑时间"></a>4.1 逻辑时间</h1><ul>
+<li>物理钟：计算多少秒时间流逝了</li>
+<li>逻辑钟：计算多少时间发生了</li>
+</ul>
+<h2 id="Lamport-Timestamp"><a href="#Lamport-Timestamp" class="headerlink" title="Lamport Timestamp"></a><strong>Lamport Timestamp</strong></h2><p><strong>Lamport Timestamp</strong> 是一种<strong>衡量时间和因果关系的方法</strong>。现实生活中，很多程序都有着因果（causality）关系，比如执行完事件 A 后才能执行事件 B。通过逻辑时间，我们可以判断不同事件的因果顺序关系。</p>
+<p>Lamport Timestamp 算法的实现遵循以下规则：</p>
+<ul>
+<li>每一台机器内部都有一个时间戳（Timestamp），初始值为 0。</li>
+<li>机器执行一个事件（event）之后，该机器的 timestamp + 1。</li>
+<li>当机器发送信息（message）给另一台机器，它会附带上自己的时间戳，如 <strong>&lt;message, timestamp&gt;</strong> 。</li>
+<li>当机器接受到一条 message，它会<strong>将本机的 timestamp 和 message 的 timestamp</strong> 进行对比，选取大的 timestamp 并 +1。</li>
+</ul>
+<h2 id="因果律（如何判断因果关系）⭐"><a href="#因果律（如何判断因果关系）⭐" class="headerlink" title="因果律（如何判断因果关系）⭐"></a>因果律（如何判断因果关系）⭐</h2><p><img src="https://s2.loli.net/2022/03/15/TpWqSJfhwKd2ueN.png" alt="Untitled"></p>
+<p>如果事件 A 在事件 B 之前发生，（叫做 <em>happened-before</em>，表示为 A→B），那么事件 A 的时间戳一定小于事件 B。即表达为：$A  \rightarrow B \Rightarrow C(A)&lt;C(B)$</p>
+<p>但是我们要注意这种推导关系是不能反过来的。$C(A)&lt;C(B)\neq A \rightarrow B$</p>
+<p>我们还可以知道，如果$C(A)&lt;=C(B)$，那么事件 B 是绝对不可能发生在事件 A 之前。$C(A)&lt;=C(B) \Rightarrow B \nrightarrow A$</p>
+<p>当然，如果事件 A 和 事件 B 的时间戳相同，则它们是<strong>并行</strong>或<strong>独立</strong>的，即$C(A) = C(B) \Rightarrow A \nleftrightarrow B$ </p>
+<h2 id="向量钟⭐"><a href="#向量钟⭐" class="headerlink" title="向量钟⭐"></a>向量钟⭐</h2><ul>
+<li>背景  但是 Lamport Timestamp 不能很好的满足分布式系统，比如你不能区分两个事件是否有关联，或者在一个<strong>多点读</strong>的 key-value 数据库中，你无法确定保存哪一份副本（通常保存最新的那份副本）。  如下图所示，你其实无法单纯的通过 logic clock 比较来判断 Process 1 中的事件 3 和 Process 2 中的事件 8 是否有关系。  <img src="https://s2.loli.net/2022/03/15/xD8bEWAwJNV4Oag.png" alt="Untitled">  因此引入Vector Clock（向量逻辑时间）</li>
+</ul>
+<p>Vector Clock 是通过向量（数组）包含了一组 Logic Clock，里面每一个元素都是一个 Logic Clock。如上图，我们有 3 台机器，那么 Vector Clock 就包含三个元素，每一个元素的索引（index）指向自己机器的索引。我们遵循以下规则：</p>
+<ul>
+<li>每一台机器都初始化所有的 timestamp 为 0。例如上面的例子，每一台机器初始的 Vector Clock 均为 <code>[0, 0, 0]</code> 。</li>
+<li><strong>当机器处理一个 event，它会在向量中将和自己索引相同的元素的 timestamp + 1</strong>。例如 1 号 机器处理了一个 event，那么 1 号机器的 Vector Clock 变为 <code>[1, 0, 0]</code> 。</li>
+<li>每当发送 message 时，它会将向量中自己的 timestamp + 1，并附带在 message 中进行发送。如 <strong>&lt;message, vector&gt;</strong> 。</li>
+<li>当一台机器接收到 message 时，它会把自己的 Vector Clock 和 message 中的 Vector Clock 进行逐一对比（每一个 timestamp 逐一对比），并将 timestamp 更新为更大的那个（类似于 Lamport Timestamp 的操作）。然后它会对代表自己的 timestamp + 1。</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/03/15/PDOv3Wio6S8b2fQ.png" alt="Untitled"></p>
+<h2 id="K-V-数据库中的应用"><a href="#K-V-数据库中的应用" class="headerlink" title="K/V 数据库中的应用"></a><strong>K/V 数据库中的应用</strong></h2><ul>
+<li>举例  传统的分布式数据库<strong>存在一个 leader</strong>，leader 接收写入请求后，会将写入数据同步到集群一半以上的节点上面。一半以上节点反馈写入成功后，leader 再返回给客户端写入成功，有点类似于 Raft ，是单点写的。  <strong>如果我们引入了 Vector Clock，我们可以实现多点写</strong>，如 Dynamo 论文中所示。  假设 Key K 有三个副本 k1, k2, k3（目前是一样的），分别位于 M1, M2, M3 三台服务器上面，现在因为某种故障，导致了网络分区，三台机器均不能互相通信，但是每台机器仍然能够和客户端保持通讯。  <strong>其中 k1 副本被 client 1 持续更新，k2 副本被 client 2 持续更新。</strong>当三台机器之间互相通讯恢复的时候，进行副本同步时，应该保留哪个版本？如果只保留 k2，即采用 last write win 机制，那么同步后，client 1 会发现它写的数据丢了。  这个时候就需要 Vector Clock，更确切的说是 Version Clock（Dynamo 中是这么说的）。  为了处理这种场景，Dynamo 使用 Version Clock 来捕获同一份数据（Object） 的不同版本之间的因果关系（causality）。每个 Object 的每个版本会有一个相关联的 Version Clock , 形如 <code>[(serverA, counter), (serverB, counter),...]</code>， 通过检查同一个 Object 不同版本的 Version Clock，可以决定是否可以完全丢弃一个版本，仅保留另外一个版本，还是需要将两个版本进行合并（merge）。<strong>如果 Object 的版本 A 的 Version Clock 中的每项 <code>(server, counter)</code> 在版本 B 的 Version Clock 中都有对应项，并且 counter 小于等于版本 B 中对应项的 counter，那么这个 Object 的版本 A 可以被丢弃，否则需要对两个版本进行 merge。</strong>  回到刚才的例子，k1 被更新，Version Clock (注:此处假设 k1/k2/k3 三个副本之前一模一样) 为<code>[(M1, 1), (M2, 0), (M3, 0)]</code>，k2 被更新，Version Clock 为<code>[(M1, 0), (M2,1), (M3, 0)]</code>，随后 k1 和 k2 网络通了，他们通过比较两个 Version Clock 发现两个 Version Clock 存在冲突，且不存在对方每一项 Logic Clock 小于自己的 Logic Clock，那么就两个版本都保留，当客户端来读 Key=K 的时候，两个版本的数据和对应的 Version Clock 都返回给客户端，由客户端进行冲突合并，客户端进行冲突合并后写入Key K的时候，带着合并后的 Version Clock <code>[(M1, 1), (M2, 1), (M3, 0)]</code> 发到M1 和 M2 两台机器，覆盖服务器版本，冲突解决。</li>
+</ul>
+<h2 id="Vector-Clock-缺陷"><a href="#Vector-Clock-缺陷" class="headerlink" title="Vector Clock 缺陷"></a><strong>Vector Clock 缺陷</strong></h2><h3 id="系统伸缩（Scale）缺陷"><a href="#系统伸缩（Scale）缺陷" class="headerlink" title="系统伸缩（Scale）缺陷"></a><strong>系统伸缩（Scale）缺陷</strong></h3><p>其实 Vector Clock 对资源的伸缩支持并不是很好，因为对于一个 key 来说，随着服务器数量的增加，Vector Clock 中向量的元素也同样增长。假设集群有 1000 台机器，每次传递信息时都要携带这个长度为 1000 的 Vector，这个性能不太好接受。</p>
+<h3 id="非唯一缺陷"><a href="#非唯一缺陷" class="headerlink" title="非唯一缺陷"></a><strong>非唯一缺陷</strong></h3><p>在正常的系统下面，假设所有的消息都是有序的（即同一台机器发送 消息 1 和 2 到另一台机器，另一台机器也会先接收到消息 1 再接收消息 2）。那么我们可以根据每一台机器的 Vector Clock 来恢复它们之间的计算（computation）关系，也就是每一种计算都有着对应自己独一无二的 Vector Clock。</p>
+<p>但是，<strong>如果消息不是有序的，消息之间会‘超车‘（overtaking）</strong>，那么问题就来了，看下图：</p>
+<p><a target="_blank" rel="noopener" href="https://cdn.inlighting.org/blog/2020-05-02-uJrKNN.png!slim">https://cdn.inlighting.org/blog/2020-05-02-uJrKNN.png!slim</a></p>
+<p>左右两张图，两种不一样的计算方式，但是最终 p 和 q 上面产生了相同的 Vector Clock。也就是说，<strong>相同的 Vector Clock 并不代表唯一的 computation。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://cdn.inlighting.org/blog/2020-05-02-ugBzFk.png!slim">https://cdn.inlighting.org/blog/2020-05-02-ugBzFk.png!slim</a></p>
+<p>这张图中，我们可以看看 r 节点中的 j，我们无法判断这个 j 是从 p 那边的 e 传递过来还是 r 自己处理了一个事件，在自己 i 的基础上面 +1 。</p>
+<p><strong>解决办法 1</strong></p>
+<p>在 Vector Clock 中添加事件类型，例如用内部（internal），发送（send），接收（receive）3 种事件表明 Vector Clock。但是这样的话还是有问题，</p>
+<p><a target="_blank" rel="noopener" href="https://cdn.inlighting.org/blog/2020-05-02-ajHByN.png!slim">https://cdn.inlighting.org/blog/2020-05-02-ajHByN.png!slim</a></p>
+<p>我们标明了 send 和 receive 两种事件，但是结果还是不同的 computation 产生了相同的 Vector Clock。<strong>（两个receive超车了）</strong></p>
+<p><strong>解决办法 2</strong></p>
+<p>将 Vector Clock 改为既包含接收到消息的时间和本地时间。例如下面这个图：</p>
+<p><a target="_blank" rel="noopener" href="https://cdn.inlighting.org/blog/2020-05-02-ajHByN.png!slim">https://cdn.inlighting.org/blog/2020-05-02-ajHByN.png!slim</a></p>
+<p>将左边图改为 h:(&lt;3,0&gt;,&lt;3,1&gt;),i:(&lt;1,0&gt;,&lt;3,2&gt;,j:(&lt;2,0&gt;),&lt;3,3&gt;) ，右边图中变为 h:(&lt;3,0&gt;,&lt;3,1&gt;),i:(&lt;2,0&gt;,&lt;3,2&gt;,j:(&lt;1,0&gt;),&lt;3,3&gt;) 。</p>
+<p>通过这种方法，我们能够确定每一种 computation 有着唯一的 Vector Clock。<strong>虽然这种会导致 Vector Clock 体积增长了一倍。</strong></p>
+<p>当然这种方法也不一定完全需要，因为只要我们能够保证消息发送到达的有序，即不产生消息超车（Overtaking）的情况下，原来的 Vector Clock 也够用了。你可以在发送的消息上面再携带上本机的 timestamp，然后对方接受的时候，根据 timestamp 的先后顺序对消息进行排序（因为就是两个节点，点对点，可以使用这种时间戳的方式），这样就保证了消息不会发生超车。参考 TCP 对消息顺序的控制。</p>
+<h1 id="4-2-广播协议"><a href="#4-2-广播协议" class="headerlink" title="4.2 广播协议"></a>4.2 广播协议</h1><ul>
+<li>sending a message是proccess主动做的事</li>
+<li>receiving a message是process被动发生的事</li>
+<li>delivering a message是在receiving a message后主动做的事</li>
+</ul>
+<h2 id="FIFO-broadcast"><a href="#FIFO-broadcast" class="headerlink" title="FIFO broadcast"></a>FIFO broadcast</h2><ul>
+<li>最弱的广播类型称为FIFO广播，它与FIFO链接密切相关。在这个模型中，结点收到什么就发送什么，先来先发</li>
+</ul>
+<h2 id="Causal-broadcast"><a href="#Causal-broadcast" class="headerlink" title="Causal broadcast"></a>Causal broadcast</h2><ul>
+<li>因果广播意味着比FIFO广播更强的条件，如果m2 与 m1 有因果关系，那么m2 必须在 m1 之后</li>
+<li>下图是一个符合FIFO但不符合因果广播的例子，结点C广播m2早于m1</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/03/15/Dso6IkTc5PVRmSM.png" alt="Untitled"></p>
+<h2 id="Totally-ordered-broadcast"><a href="#Totally-ordered-broadcast" class="headerlink" title="Totally-ordered broadcast"></a><strong><strong>Totally-ordered broadcast</strong></strong></h2><ul>
+<li>第三种类型的广播是全序广播，有时也称为原子广播。</li>
+<li>虽然FIFO和因果广播允许不同的节点以不同的顺序传递消息，但全序广播加强了节点间的一致性，确保所有节点以相同的方式传递消息</li>
+<li>总结来说就是：<strong>没有因果关系的事件广播顺序可以调换，有因果关系的事件广播顺序所有结点必须相同（因果广播与全序广播并没有关系）</strong></li>
+</ul>
+<p>最后引出<strong>FIFO全顺序广播，就是套娃</strong></p>
+<p><img src="https://s2.loli.net/2022/03/15/ujp8RQav9lSVOW6.png" alt="Untitled"></p>
+<h1 id="4-3-广播算法的实现"><a href="#4-3-广播算法的实现" class="headerlink" title="4.3 广播算法的实现"></a>4.3 广播算法的实现</h1><p>分成两个层次：</p>
+<ul>
+<li>通过重传丢失的信息，使best-effort的广播服务变成可靠的广播服务</li>
+<li>在可靠广播的基础上加强广播的顺序</li>
+</ul>
+<h2 id="reliable-broadcast"><a href="#reliable-broadcast" class="headerlink" title="reliable broadcast"></a>reliable broadcast</h2><p>最初的想法：最初的发送结点把msg广播给所有与它相连的结点，结束。</p>
+<p>问题：有些结点message没收到，发送节点重传的时候宕机了，导致数据不一致</p>
+<p>改进：每个结点收到msg之后，广播给所有与它相连的结点</p>
+<p>问题：$O(N^2)$复杂度</p>
+<p>因此有：<strong>Gossip protocols</strong></p>
+<p>每个结点收到msg之后，广播给所有与它相连的N个结点，<strong>N个结点随机选择</strong></p>
+<h2 id="FIFO-broadcast-algorithm"><a href="#FIFO-broadcast-algorithm" class="headerlink" title="FIFO broadcast algorithm"></a>FIFO broadcast algorithm</h2><p>以下讨论皆在可靠广播的前提下</p>
+<p>伪代码：（</p>
+<ul>
+<li>初始化变量：sendSeq（记录自己节点发送了多少msg），delivered（列表记录各个结点现在的序号），buffer（阻塞消息直到适合发送的事件）</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/03/15/23fRWIeKOXrsql9.png" alt="Untitled"></p>
+<ul>
+<li>每当结点自己要广播时，发送（自己结点编号，自己发送消息的序号，消息），并让自己发送消息的序号自增1</li>
+<li>每当结点收到msg时，先将msg加入buffer，从buffer中寻找<code>msg[0] == sender &amp;&amp; msg[1] == delivered[sender] + 1</code>的，进行广播，并且把<code>delivered[sender]</code>自增</li>
+</ul>
+<h2 id="Causal-broadcast-algorithm"><a href="#Causal-broadcast-algorithm" class="headerlink" title="Causal broadcast algorithm"></a>Causal broadcast algorithm</h2><ul>
+<li>初始化同FIFO</li>
+<li>当结点自己要发送时，<strong>比FIFO额外加上更新后的delivered数组</strong></li>
+<li>当节点接收msg时，<strong>比FIFO多一个判断delivered数组小（保证有因果关系的msg按顺序）</strong></li>
+</ul>
+<p><img src="https://s2.loli.net/2022/03/15/VYU9W65EJtkeio3.png" alt="Untitled"></p>
+<p>那么向量时钟如何比较并推断因果关系呢？利用下面的公式</p>
+<p><img src="https://s2.loli.net/2022/03/15/e97iv1GgMpkqd4D.png" alt="Untitled"></p>
+<h2 id="Total-order-broadcast-algorithms"><a href="#Total-order-broadcast-algorithms" class="headerlink" title="Total order broadcast algorithms"></a>Total order broadcast algorithms</h2><p>比较难实现，一般可以考虑通过第三方协调服务实现或通过单节点统一管理</p>
+<p>领导人方法：</p>
+<ul>
+<li>所有结点想要广播必须发给领导，让领导按照FIFO来发</li>
+<li>问题：领导宕机，重新选举很困难</li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a target="_blank" rel="noopener" href="https://www.inlighting.org/archives/lamport-timestamp-vector-clock/">Lamport 逻辑时钟（Lamport Timestamp）和 Vector Clock 简单理解 | 沧海月明 (inlighting.org)</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Lamport_timestamps">https://en.wikipedia.org/wiki/Lamport_timestamps</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Distributed-Systems/">Distributed Systems</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/13/Distributed%20System/5%20Replicat%20f89c4/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">分布式系统:5.Replication</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/11/Distributed%20System/3%20Time,%20cl%20ac1fa/">
+                        <span class="hidden-mobile">分布式系统:3.Time, clocks, and ordering of events</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

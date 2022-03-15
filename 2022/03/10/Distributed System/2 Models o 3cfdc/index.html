@@ -13,26 +13,25 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 1">
+  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 2">
   <meta name="author" content="wuyifff">
   <meta name="keywords" content="">
-  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 1">
+  <meta name="description" content="DDIA作者Martin Kleppmann分布式系统 chapter 2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="分布式系统:1.introduction to Distributed Systems">
-<meta property="og:url" content="https://wuyifff.github.io/2022/03/09/Distributed%20System/ch1/index.html">
+<meta property="og:title" content="分布式系统:2.Models of distributed systems">
+<meta property="og:url" content="https://wuyifff.github.io/2022/03/10/Distributed%20System/2%20Models%20o%203cfdc/index.html">
 <meta property="og:site_name" content="wuyifff&#39;s blog">
-<meta property="og:description" content="DDIA作者Martin Kleppmann分布式系统 chapter 1">
+<meta property="og:description" content="DDIA作者Martin Kleppmann分布式系统 chapter 2">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/03/09/wY8tPdl5TFQUy7f.png">
-<meta property="og:image" content="https://s2.loli.net/2022/03/09/5YcbVglU1XSipam.png">
-<meta property="og:image" content="https://s2.loli.net/2022/03/09/2XojBslAMrReQ9U.png">
-<meta property="article:published_time" content="2022-03-09T07:02:00.000Z">
-<meta property="article:modified_time" content="2022-03-15T03:32:00.464Z">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/G1gn2PyTNH5urmd.png">
+<meta property="og:image" content="https://s2.loli.net/2022/03/15/h9QDOAbR3Bp4mEu.png">
+<meta property="article:published_time" content="2022-03-10T02:02:00.000Z">
+<meta property="article:modified_time" content="2022-03-15T03:31:53.604Z">
 <meta property="article:author" content="wuyifff">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2022/03/09/wY8tPdl5TFQUy7f.png">
+<meta name="twitter:image" content="https://s2.loli.net/2022/03/15/G1gn2PyTNH5urmd.png">
   
-  <title>分布式系统:1.introduction to Distributed Systems - wuyifff&#39;s blog</title>
+  <title>分布式系统:2.Models of distributed systems - wuyifff&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -167,7 +166,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="分布式系统:1.introduction to Distributed Systems">
+            <span class="h2" id="subtitle" title="分布式系统:2.Models of distributed systems">
               
             </span>
 
@@ -182,8 +181,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-03-09 15:02" pubdate>
-        2022年3月9日 下午
+      <time datetime="2022-03-10 10:02" pubdate>
+        2022年3月10日 上午
       </time>
     </span>
   
@@ -193,7 +192,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      1.7k 字
     </span>
   
 
@@ -202,7 +201,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6 分钟
+      5 分钟
     </span>
   
 
@@ -239,7 +238,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">分布式系统:1.introduction to Distributed Systems</h1>
+            <h1 style="display: none">分布式系统:2.Models of distributed systems</h1>
             
               <p class="note note-info">
                 
@@ -248,67 +247,108 @@
               </p>
             
             <div class="markdown-body">
-              <h1 id="1-introduction-to-Distributed-Systems"><a href="#1-introduction-to-Distributed-Systems" class="headerlink" title="1. introduction to Distributed Systems"></a>1. introduction to Distributed Systems</h1><h1 id="1-1-About-Distributed-Systems"><a href="#1-1-About-Distributed-Systems" class="headerlink" title="1.1 About Distributed Systems"></a>1.1 About <strong><strong>Distributed Systems</strong></strong></h1><p>单机的并发<strong>（concurrency）</strong>又称为是共享内存(shared-memory)的并发，通过指针或变量可以很方便的进行</p>
-<p>而非单机场景下，不同的电脑可以并行执行程序，他们只能通过网络通信，构成分布式系统</p>
-<p>分布式系统中每一个电脑被称为<strong>结点(node)，结点可以是任何互相连接的计算设备</strong></p>
-<h3 id="为何构建分布式系统？（优点）"><a href="#为何构建分布式系统？（优点）" class="headerlink" title="为何构建分布式系统？（优点）"></a>为何构建分布式系统？（优点）</h3><ol>
-<li>一些应用是天然(intrinsically)的分布式系统，例如接打电话</li>
-<li>分布式系统比单机更加<strong>可靠</strong></li>
-<li>分布式系统有更好的<strong>性能</strong>，更快的响应速度（地理相邻）</li>
-<li>一些<strong>数据太大</strong>而不能放在一个机器上</li>
-</ol>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ol>
-<li><strong>网络错误</strong>导致结点无法相互通信</li>
-<li>结点可能会崩溃(crash)、运行缓慢</li>
-</ol>
-<p>因此：</p>
+              <h1 id="2-Models-of-distributed-systems"><a href="#2-Models-of-distributed-systems" class="headerlink" title="2. Models of distributed systems"></a>2. Models of distributed systems</h1><h1 id="2-1-The-two-generals-problem"><a href="#2-1-The-two-generals-problem" class="headerlink" title="2.1 The two generals problem"></a>2.1 The two generals problem</h1><p><img src="https://s2.loli.net/2022/03/15/G1gn2PyTNH5urmd.png" alt="Untitled"></p>
+<p>应用到在线购物上</p>
+<p><img src="https://s2.loli.net/2022/03/15/h9QDOAbR3Bp4mEu.png" alt="Untitled"></p>
+<p>不同的是，这种情况下可以钱可以先打到账上，无论是否发货。支付服务总是进行支付是安全的，因为如果商店如果不能发货，它可以退款。付款是可以撤销的（不像一支军队被击败）使问题得以解决。</p>
+<p>类比TCP三次握手</p>
+<h1 id="2-2-The-Byzantine-generals-problem"><a href="#2-2-The-Byzantine-generals-problem" class="headerlink" title="2.2 The Byzantine generals problem"></a>2.2 The Byzantine generals problem</h1><p>假设信使不会在路上被杀害，但是存在叛徒（恶意malicious），发送欺骗信息</p>
+<p>结论：至少需要$3f+1$个结点来允许$f$个结点为恶意节点（恶意结点个数必须严格小于$\frac{1}{3}$)</p>
+<p>数字签名和密码学也可以解决问题（但很复杂）</p>
+<p>Byzantine fault tolerant 拜占庭容错</p>
+<h1 id="2-3-Describing-nodes-and-network-behaviour"><a href="#2-3-Describing-nodes-and-network-behaviour" class="headerlink" title="2.3 Describing nodes and network behaviour"></a>2.3 Describing nodes and network behaviour</h1><ul>
+<li>网络：不可靠的、少量丢失的、可靠的</li>
+<li>结点：拜占庭、崩溃恢复、崩溃停止</li>
+<li>同步：异步、部分同步(无线时间下同步)、同步(有时间限制)</li>
+</ul>
+<p>网络导致不同步问题：</p>
 <ul>
-<li>我们需要有方法检测crash</li>
-<li>分布式系统需要有容错处理</li>
+<li>消息丢失</li>
+<li>网络拥堵</li>
+<li>路由器重新配置</li>
 </ul>
-<h1 id="1-2-RPC（远程过程调用）"><a href="#1-2-RPC（远程过程调用）" class="headerlink" title="1.2 RPC（远程过程调用）"></a>1.2 RPC（远程过程调用）</h1><p>分布式系统不关心网络如何传输，只关心网络的两个指标：<strong>时延(latency)、吞吐量(bandwidth)</strong></p>
-<p>RPC的调用其他本地的函数一样，只是在本地的代码中，一部分的执行需要等待<strong>别的结点</strong>上的程序的执行结果返回。</p>
-<p>RPC 会<strong>隐藏底层的通讯细节</strong>（不需要直接处理Socket通讯或Http通讯），在调用时会留下一个stub，就像其他本地的代码一样。</p>
+<p>结点导致不同步问题：</p>
 <ul>
-<li>通信流程<ul>
-<li>首先寻址通讯，<strong>建立TCP连接</strong></li>
-<li>当A服务器上的应用发起远程过程调用时，方法的<strong>参数</strong>需要通过底层的网络协议如TCP传递到B服务器，由于<strong>网络协议是基于二进制的</strong>，内存中的参数的值要序列化成二进制的形式，也就是<strong>序列化（Serialize）或编组（marshal）</strong>，通过寻址和传输将序列化的二进制发送给B服务器。</li>
-<li>B服务器收到请求后，需要对参数进行<strong>反序列化</strong>（序列化的逆操作），<strong>恢复为内存中的表达方</strong>式，然后找到对应的方法（寻址的一部分）进行本地调用，然后得到返回值。</li>
-<li>返回值还要发送回服务器A上的应用，也要经过序列化的方式发送，服务器A接到后，再反序列化，恢复为内存中的表达方式，<strong>交给A服务器上的应用</strong></li>
+<li>操作系统调度</li>
+<li>垃圾回收</li>
+<li>缺页中断</li>
 </ul>
-  <img src="https://s2.loli.net/2022/03/09/wY8tPdl5TFQUy7f.png" alt="rpc">  rpc</li>
-</ul>
-<p><img src="https://s2.loli.net/2022/03/09/5YcbVglU1XSipam.png" alt="rpc2"></p>
-<p>rpc2</p>
-<p>如果RPC调用失败，则会重试不止一次。但如果一直错误，不能无限的重试，因此需要设置<strong>超时(timeout)</strong></p>
-<p>RPC框架要做到最基本的3件事情：</p>
+<table>
+<thead>
+<tr>
+<th>网络模型</th>
+<th>节点模型</th>
+<th>时机模型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>可靠（reliable）：消息一定可达</td>
+<td>崩溃停止（fair-stop）：节点可能崩溃且永远不会恢复</td>
+<td>同步（synchronous）：消息只会延迟有限时间、节点以已知的速度执行</td>
+</tr>
+<tr>
+<td>部分丢失？（fair-loss）：消息可能丢失，但有限时间内重新发送一定能达到；（可通过retry达到reliable）</td>
+<td>崩溃恢复（fair-recover）：节点可能崩溃但有限时间内能够恢复</td>
+<td>部分同步（partically-synchronous）：大部分情况下是同步，部分情况下是异步</td>
+</tr>
+<tr>
+<td>任意（arbitrary）：消息可能被截获；（可通过TLS达到fair-loss）</td>
+<td>拜占庭：节点可能做出欺骗算法的行为</td>
+<td>异步（asynchronous）:消息可能延迟、节点可能暂停，且恢复时间不可知</td>
+</tr>
+</tbody></table>
+<p>对于真实的分布式环境，一般是崩溃恢复+部分同步。</p>
+<h1 id="2-4-Fault-tolerance-and-high-availability"><a href="#2-4-Fault-tolerance-and-high-availability" class="headerlink" title="2.4 Fault tolerance and high availability"></a>2.4 Fault tolerance and high availability</h1><p>服务器24/7运行</p>
+<table>
+<thead>
+<tr>
+<th>work</th>
+<th>fault</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>99%</td>
+<td>down 3.7 days/year</td>
+</tr>
+<tr>
+<td>99.9%</td>
+<td>down 8.8 hours/year</td>
+</tr>
+<tr>
+<td>99.99%</td>
+<td>down 53 minutes/year</td>
+</tr>
+<tr>
+<td>99.999%</td>
+<td>down 5.3 minutes/year</td>
+</tr>
+</tbody></table>
+<p>Service-Level Objective (<strong>SLO</strong>)：服务水平目标</p>
+<p>Service-level agreement(<strong>SLA</strong>)：服务水平协议，服务提供方与客户间的协议/合同</p>
+<h2 id="高可用：容错"><a href="#高可用：容错" class="headerlink" title="高可用：容错"></a>高可用：容错</h2><p>Failure：整个不可用</p>
+<p>Fault：系统部分不可用</p>
 <ul>
-<li><strong>服务端如何确定客户端要调用的函数</strong>；<br>在远程调用中，客户端和服务端分别<strong>维护一个【ID-&gt;函数】的对应表</strong>， ID在所有进程中都是唯一确定的。客户端在做远程过程调用时，附上这个ID，服务端通过查表，来确定客户端需要调用的函数，然后执行相应函数的代码。</li>
-<li><strong>如何进行序列化和反序列化</strong>；<br>客户端和服务端交互时将参数或结果转化为字节流在网络中传输，那么数据转化为字节流的或者将字节流转换成能读取的<strong>固定格式</strong>时就需要进行序列化和反序列化，序列化和反序列化的<strong>速度</strong>也会影响远程调用的效率。</li>
-<li><strong>如何进行网络传输</strong><br>多数RPC框架选择TCP作为传输协议，也有部分选择HTTP。如gRPC使用HTTP2。不同的协议各有利弊。TCP更加高效，而HTTP在实际应用中更加的灵活</li>
+<li>结点crash、偏离算法（拜占庭）</li>
+<li>网络错误、延迟</li>
 </ul>
-<h2 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h2><p>representational state transfer <strong>表征状态转移</strong>（REST）</p>
-<p>REST是一种架构风格，指的是一组架构约束条件和原则。满足这些约束条件和原则的应用程序或设计就是 RESTful。REST规范<strong>把所有内容都视为资源</strong>，网络上一切皆资源。</p>
+<p>错误检测：结点要么错误、要么工作正常</p>
+<p>一般错误检测通过超时实现，但无法区分结点到底是crash还是偶尔无响应、网络延迟</p>
+<p>只有在绝对可靠的链路（同步系统）中才存在完美的超时错误检测机制，在异步系统中超时检测是没有意义的。</p>
+<p>在半同步系统中，采取最终错误检测机制(<strong>Eventually perfect failure detector</strong>)：</p>
 <ul>
-<li><strong>6个约束</strong>：<ol>
-<li><strong>客户端—服务器</strong><br>服务端与客户端<strong>独立实现并独立开发</strong>，只要<strong>接口不改变</strong>即可。提高跨多个平台的用户接口的可移植性并提高可伸缩性。</li>
-<li><strong>统一接口</strong><br>系统中的多个组件都依赖于统一接口，包含4个子约束：<ol>
-<li><strong>资源的标识</strong><br>资源<strong>通过URL区分</strong>，当访问一个URL时，能够获取该资源或对它执行相应的操作。</li>
-<li><strong>通过表述操作资源</strong><br>客户端请求资源时，可以指定期望的格式，服务器返回响应时，响应包含了指定格式的资源。访问同一个资源的不同格式无须修改资源的标识符，客户端也可以通过资源的表述对资源进行操作。</li>
-<li><strong>自描述消息</strong><br>客户端和服务器之间传递的消息都应<strong>包含足够的信息</strong>（如<strong>资源表述的格式和内容长度，甚至相关的其他操作信息</strong>）。</li>
-<li>超媒体作为应用程序状态的引擎（HATEOAS）<br>服务器返回的资源表述中包含与之相关的链接，这些链接能够对资源执行其他操作。</li>
-</ol>
-</li>
-<li><strong>分层系统</strong><br>服务端和客户端不知道网络中介（代理或网关等）的存在，增强安全、负载均衡和响应缓存等。</li>
-<li><strong>缓存</strong><br>客户端和网络中介都可以缓存服务器返回的响应，以便于减少数据获取延迟和服务器的请求次数，提高系统性能。</li>
-<li><strong>无状态</strong><br>服务器不会记录或存储客户端的状态信息。从客户端到服务器的每个请求都必须包含理解请求所需的所有信息，并且不能利用服务器上任何存储的上下文。</li>
-<li><strong>按需编码（可选）</strong><br>允许服务器临时向客户端返回可执行的程序代码用于客户端拓展和自定义功能，简化客户端。</li>
-</ol>
-</li>
+<li>可能会认为一个结点错误，但是其仍然正常运行</li>
+<li>可能会认为一个节点正常，但是其以及出错</li>
+<li>但是最终，只有当一个节点错误的时候才会被认为出错</li>
 </ul>
-<p><img src="https://s2.loli.net/2022/03/09/2XojBslAMrReQ9U.png" alt="Untitled"></p>
-<h2 id="SOA（Service-Oriented-Architecture）"><a href="#SOA（Service-Oriented-Architecture）" class="headerlink" title="SOA（Service-Oriented Architecture）"></a><strong><strong>SOA（Service-Oriented Architecture）</strong></strong></h2><p>将一个大型软件分成多个服务（或多个结点），其间通过RPC来通信</p>
-<p><strong>微服务是SOA架构的一种变体</strong></p>
+<p>系统模型可以帮我们评测分布式<strong>算法的正确性</strong>，如果针对一个系统模型的算法在各种情况下都能满足<strong>算法的定义</strong>，那么我们可以说这个算法是正确的。</p>
+<p>算法的定义即算法的描述，如排序算法的定义可以是对于输出列表的任何两个不同的元素，左边的小于右边的，而对于算法的定义可以区分两种不同的类型，即<strong>安全性（safety）</strong>和<strong>活性（liveness）</strong>。</p>
+<ul>
+<li><strong>安全性：不会给出错误的结果</strong></li>
+<li><strong>活性：预期的事情最终一定会发生</strong></li>
+</ul>
+<p>通常对于分布式算法，要求在所有可能的系统模型下，都不能违反算法的安全性定义。</p>
+<p>然而，系统模型只是对现实某部分的简化抽象，例如建立在崩溃恢复模型下的算法处理不了持久性数据被破坏（硬盘故障）的情况。即证明算法正确不意味着真实系统上的某个具体实现一定是正确的。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/375281486">分布式系统（一）：挑战与系统模型 - 知乎 (zhihu.com)</a></p>
 
             </div>
             <hr>
@@ -336,9 +376,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/03/10/Distributed%20System/2%20Models%20o%203cfdc/">
+                      <a href="/2022/03/11/Distributed%20System/3%20Time,%20cl%20ac1fa/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">分布式系统:2.Models of distributed systems</span>
+                        <span class="hidden-mobile">分布式系统:3.Time, clocks, and ordering of events</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -346,8 +386,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/11/02/c++/14.%E9%87%8D%E8%BD%BD%E8%BF%90%E7%AE%97%E4%B8%8E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">
-                        <span class="hidden-mobile">C++ primer 读书笔记 chapter 14 重载运算与类型转换</span>
+                      <a href="/2022/03/09/Distributed%20System/ch1/">
+                        <span class="hidden-mobile">分布式系统:1.introduction to Distributed Systems</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
